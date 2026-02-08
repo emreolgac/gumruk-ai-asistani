@@ -14,7 +14,11 @@ import {
     Terminal,
     ChevronRight,
     Plus,
-    Trash2
+    Trash2,
+    Share2,
+    ThumbsUp,
+    Star,
+    PieChart as PieIcon
 } from 'lucide-react';
 import {
     BarChart,
@@ -25,7 +29,10 @@ import {
     Tooltip,
     ResponsiveContainer,
     AreaChart,
-    Area
+    Area,
+    PieChart,
+    Cell,
+    Pie
 } from 'recharts';
 
 interface DashboardStats {
@@ -38,25 +45,17 @@ interface DashboardStats {
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState<DashboardStats | null>(null);
-    const [notes, setNotes] = useState<any[]>([]);
-    const [newNote, setNewNote] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchData();
+        fetchStats();
     }, []);
 
-    const fetchData = async () => {
+    const fetchStats = async () => {
         try {
-            const [statsRes, notesRes] = await Promise.all([
-                fetch('/api/admin/stats'),
-                fetch('/api/admin/notes')
-            ]);
-            const statsData = await statsRes.json();
-            const notesData = await notesRes.json();
-
-            setStats(statsData);
-            setNotes(notesData);
+            const res = await fetch('/api/admin/stats');
+            const data = await res.json();
+            setStats(data);
         } catch (error) {
             console.error('Fetch error:', error);
         } finally {
@@ -64,211 +63,136 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleAddNote = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newNote.trim()) return;
-        try {
-            const res = await fetch('/api/admin/notes', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: newNote, color: 'blue' }),
-            });
-            if (res.ok) {
-                setNewNote('');
-                fetchData();
-            }
-        } catch (error) {
-            console.error('Note add error:', error);
-        }
-    };
-
-    const handleDeleteNote = async (id: string) => {
-        try {
-            await fetch('/api/admin/notes', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id }),
-            });
-            fetchData();
-        } catch (error) {
-            console.error('Note delete error:', error);
-        }
-    };
-
     if (loading || !stats) {
         return (
-            <div className="flex items-center justify-center min-h-screen font-sans">
-                <Activity className="w-10 h-10 text-blue-500 animate-spin" />
+            <div className="flex h-96 items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <RefreshCw className="w-10 h-10 text-blue-600 animate-spin" />
+                    <p className="text-slate-400 font-bold animate-pulse">VERİLER YÜKLENİYOR...</p>
+                </div>
             </div>
         );
     }
 
     const chartData = [
-        { name: 'Bugün', hits: stats.hits.today, users: stats.users.today, rev: stats.revenue.today },
-        { name: 'Bu Hafta', hits: stats.hits.week, users: stats.users.week, rev: stats.revenue.week },
-        { name: 'Bu Ay', hits: stats.hits.month, users: stats.users.total / 4, rev: stats.revenue.month },
+        { name: 'Ocak', value: 400, value2: 240 },
+        { name: 'Şubat', value: 300, value2: 139 },
+        { name: 'Mart', value: 200, value2: 980 },
+        { name: 'Nisan', value: 278, value2: 390 },
+        { name: 'Mayıs', value: 189, value2: 480 },
+        { name: 'Haziran', value: 239, value2: 380 },
     ];
 
+    const pieData = [
+        { name: 'Premium', value: stats.users.total * 0.45 },
+        { name: 'Standart', value: stats.users.total * 0.55 },
+    ];
+    const COLORS = ['#3b82f6', '#f59e0b'];
+
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div>
-                    <h1 className="text-4xl font-black text-white tracking-tight">Dashboard</h1>
-                    <p className="text-gray-400 mt-2 text-lg">Sistemin genel durumu ve canlı istatistikler.</p>
-                </div>
-                <div className="flex items-center gap-3 bg-blue-600/10 border border-blue-500/20 px-4 py-2 rounded-2xl">
-                    <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-blue-400 font-bold">{stats.users.online} Kullanıcı Online</span>
-                </div>
+        <div className="space-y-8 animate-in fade-in duration-700">
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-slate-800">Dashboard Admin</h1>
+                <button className="lg:hidden p-2 bg-white rounded-lg shadow-sm">
+                    <Activity className="w-5 h-5 text-gray-500" />
+                </button>
             </div>
 
-            {/* Main Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard
-                    icon={<DollarSign className="w-6 h-6" />}
-                    label="Bugünkü Kazanç"
-                    value={`${stats.revenue.today.toFixed(2)} ₺`}
-                    subValue={`Haftalık: ${stats.revenue.week.toFixed(2)} ₺`}
-                    color="bg-emerald-500"
+            {/* Stats Grid - Matching UI Template */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <CompactStatCard
+                    label="Earning"
+                    value={`$ ${stats.revenue.total.toFixed(0)}`}
+                    color="bg-[#1e2b4d]"
+                    textColor="text-white"
+                    icon={<DollarSign className="w-4 h-4" />}
                 />
-                <StatCard
-                    icon={<Users className="w-6 h-6" />}
-                    label="Yeni Üyeler (Bugün)"
-                    value={stats.users.today}
-                    subValue={`Bu Hafta: ${stats.users.week}`}
-                    color="bg-blue-500"
+                <CompactStatCard
+                    label="Share"
+                    value={stats.hits.total}
+                    icon={<Share2 className="w-5 h-5 text-orange-400" />}
                 />
-                <StatCard
-                    icon={<Eye className="w-6 h-6" />}
-                    label="Sözlük Hit (Bugün)"
-                    value={stats.hits.today}
-                    subValue={`Aylık: ${stats.hits.month}`}
-                    color="bg-purple-500"
+                <CompactStatCard
+                    label="Likes"
+                    value={stats.users.total}
+                    icon={<ThumbsUp className="w-5 h-5 text-orange-400" />}
                 />
-                <StatCard
-                    icon={<Zap className="w-6 h-6" />}
-                    label="API Harcaması"
-                    value={`$${stats.api.cost.toFixed(4)}`}
-                    subValue={`${stats.api.requests} İstek`}
-                    color="bg-amber-500"
+                <CompactStatCard
+                    label="Rating"
+                    value="8,5"
+                    icon={<Star className="w-5 h-5 text-orange-400" />}
                 />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Chart Column */}
-                <div className="lg:col-span-2 space-y-8">
-                    <div className="bg-gray-800/50 border border-white/5 p-8 rounded-[2.5rem] shadow-2xl backdrop-blur-md">
-                        <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
-                            <TrendingUp className="w-5 h-5 text-blue-500" />
-                            Büyüme Analizi
-                        </h3>
-                        <div className="h-[350px] w-full">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                {/* Main Charts area */}
+                <div className="xl:col-span-3 space-y-6">
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="font-bold text-slate-700">Result</h3>
+                            <button className="px-4 py-1.5 bg-orange-400 text-white text-xs font-bold rounded-lg hover:bg-orange-500 transition-colors">Check Now</button>
+                        </div>
+                        <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={chartData}>
-                                    <defs>
-                                        <linearGradient id="colorHits" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
-                                    <XAxis dataKey="name" stroke="#6b7280" fontSize={12} tickLine={false} axisLine={false} />
-                                    <YAxis stroke="#6b7280" fontSize={12} tickLine={false} axisLine={false} />
-                                    <Tooltip
-                                        contentStyle={{ backgroundColor: '#111827', border: '1px solid #ffffff10', borderRadius: '12px' }}
-                                        itemStyle={{ color: '#fff' }}
-                                    />
-                                    <Area type="monotone" dataKey="hits" stroke="#3b82f6" fillOpacity={1} fill="url(#colorHits)" strokeWidth={3} />
-                                </AreaChart>
+                                <BarChart data={chartData}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} />
+                                    <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+                                    <Bar dataKey="value" fill="#1e2b4d" radius={[4, 4, 0, 0]} barSize={12} />
+                                    <Bar dataKey="value2" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={12} />
+                                </BarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
 
-                    <div className="bg-gray-800/50 border border-white/5 p-8 rounded-[2.5rem] shadow-2xl backdrop-blur-md">
-                        <h3 className="text-xl font-bold mb-8 flex items-center gap-2">
-                            <Terminal className="w-5 h-5 text-purple-500" />
-                            Sistem Logları
-                        </h3>
-                        <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                            {stats.recentLogs.map((log: any) => (
-                                <div key={log.id} className="flex gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.03] group hover:bg-white/[0.04] transition-all">
-                                    <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${log.level === 'ERROR' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' :
-                                            log.level === 'WARN' ? 'bg-amber-500' : 'bg-blue-500'
-                                        }`} />
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{log.source}</span>
-                                            <span className="text-[10px] text-gray-600 font-mono">
-                                                {new Date(log.createdAt).toLocaleTimeString()}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm text-gray-300 truncate font-mono">{log.message}</p>
-                                    </div>
-                                    <ChevronRight className="w-4 h-4 text-gray-700 group-hover:translate-x-1 transition-transform" />
-                                </div>
-                            ))}
-                            {stats.recentLogs.length === 0 && (
-                                <div className="text-center py-10 text-gray-600">Henüz log kaydı bulunmuyor.</div>
-                            )}
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="h-[200px] w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={chartData}>
+                                    <Area type="monotone" dataKey="value2" stroke="#1e2b4d" fill="#f0f2f5" strokeWidth={3} />
+                                </AreaChart>
+                            </ResponsiveContainer>
                         </div>
                     </div>
                 </div>
 
-                {/* Sidebar Column */}
-                <div className="space-y-8">
-                    {/* Notes Section */}
-                    <div className="bg-gray-800/50 border border-white/5 p-8 rounded-[2.5rem] shadow-2xl backdrop-blur-md">
-                        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                            <StickyNote className="w-5 h-5 text-yellow-500" />
-                            Yönetici Notları
-                        </h3>
-
-                        <form onSubmit={handleAddNote} className="relative mb-6">
-                            <input
-                                type="text"
-                                placeholder="Yeni not ekle..."
-                                className="w-full bg-gray-900/50 border border-white/10 rounded-2xl py-3 pl-4 pr-12 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-                                value={newNote}
-                                onChange={(e) => setNewNote(e.target.value)}
-                            />
-                            <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-blue-600 rounded-xl hover:bg-blue-500 transition-colors">
-                                <Plus className="w-5 h-5" />
-                            </button>
-                        </form>
-
-                        <div className="space-y-3">
-                            {notes.map((note) => (
-                                <div key={note.id} className="group flex items-start gap-3 p-4 rounded-2xl bg-yellow-500/5 border border-yellow-500/10 hover:border-yellow-500/30 transition-all">
-                                    <div className="flex-1 text-sm text-yellow-100/80 leading-relaxed">{note.content}</div>
-                                    <button
-                                        onClick={() => handleDeleteNote(note.id)}
-                                        className="opacity-0 group-hover:opacity-100 p-1 text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            ))}
-                            {notes.length === 0 && (
-                                <div className="text-center py-6 text-gray-600 text-sm">Hiç not yok.</div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Revenue Details */}
-                    <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-white/5 p-8 rounded-[2.5rem] shadow-2xl backdrop-blur-md">
-                        <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-blue-400" />
-                            Kazanç Özet
-                        </h3>
-                        <div className="space-y-6">
-                            <RevenueRow label="Bugün" value={stats.revenue.today} />
-                            <RevenueRow label="Bu Hafta" value={stats.revenue.week} />
-                            <RevenueRow label="Bu Ay" value={stats.revenue.month} />
-                            <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                                <span className="text-sm font-bold text-gray-400">Toplam</span>
-                                <span className="text-2xl font-black text-white">{stats.revenue.total.toFixed(0)} ₺</span>
+                {/* Right Sidebar Charts */}
+                <div className="xl:col-span-1 space-y-6">
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center h-full">
+                        <div className="relative inline-block mb-8">
+                            <div className="h-48 w-48">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={pieData}
+                                            innerRadius={60}
+                                            outerRadius={80}
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {pieData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black text-2xl text-slate-800">
+                                45%
                             </div>
                         </div>
+
+                        <div className="space-y-4 text-left">
+                            <LegendItem label="Lorem ipsum" color="bg-blue-500" />
+                            <LegendItem label="Lorem ipsum" color="bg-orange-400" />
+                            <LegendItem label="Lorem ipsum" color="bg-slate-200" />
+                            <LegendItem label="Lorem ipsum" color="bg-slate-100" />
+                        </div>
+
+                        <button className="w-full mt-10 py-3 bg-orange-400 hover:bg-orange-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-orange-500/20">
+                            Check Now
+                        </button>
                     </div>
                 </div>
             </div>
@@ -276,27 +200,54 @@ export default function AdminDashboard() {
     );
 }
 
-function StatCard({ icon, label, value, subValue, color }: any) {
+function CompactStatCard({ label, value, icon, color, textColor }: any) {
     return (
-        <div className="relative group bg-gray-800/50 border border-white/5 p-6 rounded-[2.5rem] shadow-xl backdrop-blur-md overflow-hidden transition-all hover:scale-[1.02] hover:border-white/10">
-            <div className={`absolute -right-4 -top-4 w-24 h-24 blur-[40px] opacity-10 ${color}`} />
-            <div className="relative z-10">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 bg-white/5 group-hover:scale-110 transition-transform`}>
-                    <div className={`p-2 rounded-xl text-white ${color} shadow-lg shadow-black/20`}>{icon}</div>
-                </div>
-                <div className="text-sm font-semibold text-gray-400 mb-1">{label}</div>
-                <div className="text-3xl font-black text-white mb-1">{value}</div>
-                <div className="text-xs text-gray-500 font-medium">{subValue}</div>
+        <div className={`${color || 'bg-white'} p-6 rounded-2xl shadow-sm border border-gray-50 flex items-center justify-between`}>
+            <div>
+                <p className={`text-xs font-bold ${textColor || 'text-slate-400'} mb-2`}>{label}</p>
+                <p className={`text-3xl font-black ${textColor || 'text-slate-800'}`}>{value}</p>
             </div>
+            {icon && (
+                <div className={`p-3 rounded-xl bg-slate-50 flex items-center justify-center`}>
+                    {icon}
+                </div>
+            )}
+            {!icon && color && (
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                    <DollarSign className="w-4 h-4 text-white" />
+                </div>
+            )}
         </div>
     );
 }
 
-function RevenueRow({ label, value }: { label: string; value: number }) {
+function LegendItem({ label, color }: { label: string, color: string }) {
     return (
-        <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-400 font-medium">{label}</span>
-            <span className="text-lg font-bold text-white leading-none">{value.toFixed(2)} ₺</span>
+        <div className="flex items-center gap-3">
+            <div className={`w-2 h-2 rounded-full ${color}`} />
+            <span className="text-sm text-slate-500 font-medium">{label}</span>
         </div>
+    );
+}
+
+function RefreshCw(props: any) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+            <path d="M3 21v-5h5" />
+        </svg>
     );
 }

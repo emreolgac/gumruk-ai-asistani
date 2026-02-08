@@ -143,3 +143,37 @@ model SystemConfig {
   group     String?  // e.g., "API", "UI", "PAYMENT"
   updatedAt DateTime @updatedAt
 }
+// Dynamic Pages (Legal, About, etc.)
+model Page {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Blog System
+model BlogPost {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   String
+  excerpt   String?
+  image     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Social Media Links
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String   // twitter, linkedin, facebook, instagram
+  url       String
+  icon      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
