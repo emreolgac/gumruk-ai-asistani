@@ -37,7 +37,11 @@ export async function GET() {
             monthHits,
             apiUsageStats,
             activeSessions,
-            recentLogs
+            recentLogs,
+            totalMessages,
+            unreadMessages,
+            recentBlogs,
+            latestUsers
         ] = await Promise.all([
             prisma.user.count(),
             prisma.user.count({ where: { createdAt: { gte: today } } }),
@@ -57,9 +61,21 @@ export async function GET() {
             }),
             prisma.session.count({ where: { expires: { gte: now } } }),
             (prisma as any).systemLog.findMany({
-                take: 10,
+                take: 15,
                 orderBy: { createdAt: 'desc' },
             }),
+            (prisma as any).contactMessage.count(),
+            (prisma as any).contactMessage.count({ where: { isRead: false } }),
+            (prisma as any).blogPost.findMany({
+                take: 5,
+                orderBy: { createdAt: 'desc' },
+                select: { id: true, title: true, createdAt: true, isActive: true }
+            }),
+            prisma.user.findMany({
+                take: 5,
+                orderBy: { createdAt: 'desc' },
+                select: { id: true, name: true, email: true, createdAt: true, role: true }
+            })
         ]);
 
         // Calculate Revenues
@@ -75,6 +91,7 @@ export async function GET() {
                 today: todayUsers,
                 week: weekUsers,
                 online: activeSessions,
+                latest: latestUsers
             },
             hits: {
                 total: totalHits,
@@ -87,6 +104,11 @@ export async function GET() {
                 tokens: apiUsageStats._sum.totalTokens || 0,
                 cost: apiUsageStats._sum.cost || 0,
             },
+            messages: {
+                total: totalMessages,
+                unread: unreadMessages
+            },
+            blogs: recentBlogs,
             recentLogs
         };
 

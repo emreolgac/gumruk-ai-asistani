@@ -7,10 +7,26 @@ import Link from 'next/link';
 export default function ContactPage() {
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSubmitted(true);
-        // In real app, send to API
+        const formData = new FormData(e.target as HTMLFormElement);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message'),
+        };
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (res.ok) setSubmitted(true);
+        } catch (error) {
+            console.error('Submit error:', error);
+        }
     };
 
     return (

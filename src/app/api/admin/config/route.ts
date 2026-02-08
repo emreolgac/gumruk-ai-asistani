@@ -17,13 +17,28 @@ export async function GET() {
         if (!(await isAdmin())) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         const configs = await (prisma as any).systemConfig.findMany();
 
-        // Return merge of ENV and DB configs (for display)
-        const displayConfigs = [
-            { key: 'GEMINI_API_KEY', value: process.env.GEMINI_API_KEY ? '********' : '', group: 'API' },
-            { key: 'NEXT_PUBLIC_GTM_ID', value: process.env.NEXT_PUBLIC_GTM_ID || '', group: 'SEO' },
-            { key: 'NEXT_PUBLIC_GSC_VERIFICATION', value: process.env.NEXT_PUBLIC_GSC_VERIFICATION || '', group: 'SEO' },
-            ...configs.map((c: any) => ({ ...c, isDb: true }))
+        // Return merge of ENV and DB configs
+        const envKeys = [
+            { key: 'GEMINI_API_KEY', group: 'API' },
+            { key: 'NEXT_PUBLIC_GTM_ID', group: 'SEO' },
+            { key: 'NEXT_PUBLIC_GSC_VERIFICATION', group: 'SEO' },
+            { key: 'SITE_TITLE', group: 'SEO' },
+            { key: 'SITE_DESCRIPTION', group: 'SEO' },
+            { key: 'SMTP_HOST', group: 'MAIL' },
+            { key: 'SMTP_PORT', group: 'MAIL' },
+            { key: 'SMTP_USER', group: 'MAIL' },
+            { key: 'SMTP_FROM', group: 'MAIL' }
         ];
+
+        const displayConfigs = envKeys.map(env => {
+            const dbVal = configs.find((c: any) => c.key === env.key);
+            return {
+                key: env.key,
+                value: dbVal ? dbVal.value : (process.env[env.key] || ''),
+                group: env.group,
+                isDb: !!dbVal
+            };
+        });
 
         return NextResponse.json(displayConfigs);
     } catch (error) {
