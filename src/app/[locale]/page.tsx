@@ -21,9 +21,6 @@ import {
   Linkedin,
   Instagram,
   Send,
-  ZapIcon,
-  BotIcon,
-  Layers,
   Search,
   Check,
   ChevronDown,
@@ -33,7 +30,10 @@ import {
   Download,
   Terminal,
   Clock,
-  Briefcase
+  Briefcase,
+  RefreshCw,
+  Bot,
+  Layers
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -154,7 +154,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<BotIcon className="w-8 h-8 text-blue-500" />}
+              icon={<Bot className="w-8 h-8 text-blue-500" />}
               title="Akıllı GTİP Belirleme"
               desc="Ürün tanımlarından doğru GTİP kodlarını çıkarır ve gümrük birimi ile eşleştirir."
             />
@@ -164,7 +164,7 @@ export default function HomePage() {
               desc="Fatura, Çeki Listesi ve ATR belgelerini aynı anda analiz ederek verileri çapraz doğrular."
             />
             <FeatureCard
-              icon={<ZapIcon className="w-8 h-8 text-orange-500" />}
+              icon={<Zap className="w-8 h-8 text-orange-500" />}
               title="Ultra Hızlı İşleme"
               desc="Karmaşık 100 sayfalık bir faturayı dahi saniyeler içinde dijital tabloya dönüştürür."
             />
@@ -229,20 +229,12 @@ export default function HomePage() {
             <p className="text-gray-400 font-medium">İhtiyacınıza uygun kredi paketini seçin.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <PriceCard
-              title="Başlangıç"
-              price="Ücretsiz"
-              credits="5 Kredi"
-              features={['Temel Belge Analizi', 'GTİP Önerisi', '7 Gün Saklama', 'Topluluk Desteği']}
-              cta="Şimdi Başla"
-              light
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <PriceCard
               title="Profesyonel"
               price="₺1,499"
               credits="100 Kredi"
-              features={['Sınırsız Dil Desteği', 'ERP Entegrasyonu', 'Öncelikli İşleme', '30 Gün Saklama']}
+              features={['Sınırsız Dil Desteği', 'ERP Entegrasyonu', 'Öncelikli İşleme', '30 Gün Saklama', 'GTİP Analizörü']}
               cta="Hemen Satın Al"
               highlight
             />
@@ -250,7 +242,7 @@ export default function HomePage() {
               title="Kurumsal"
               price="Özel"
               credits="Limitsiz"
-              features={['Özel AI Modeli Eğitimi', 'Tam API Erişimi', '7/24 Teknik Danışman', 'Sınırsız Arşivleme']}
+              features={['Özel AI Modeli Eğitimi', 'Tam API Erişimi', '7/24 Teknik Danışman', 'Sınırsız Arşivleme', 'Özel SLA Anlaşması']}
               cta="Bize Ulaşın"
             />
           </div>
