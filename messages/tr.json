@@ -5,6 +5,9 @@
         "uploadButton": "Belge Yükle",
         "analyzeButton": "Analiz Et"
     },
+    "HomePage": {
+        "heroTitle": "Gümrük Beyannamelerini Saniyeler İçinde Analiz Edin"
+    },
     "Auth": {
         "login": "Giriş Yap",
         "register": "Kayıt Ol",

@@ -95,3 +95,48 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: 'Internal error' }, { status: 500 });
     }
 }
+
+// POST - Create user manually
+export async function POST(request: Request) {
+    try {
+        if (!(await isAdmin())) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
+        const body = await request.json();
+        const { name, email, password, role, credits, isPremium } = body;
+
+        if (!email) {
+            return NextResponse.json({ error: 'Email required' }, { status: 400 });
+        }
+
+        // Check if user exists
+        const existing = await prisma.user.findUnique({ where: { email } });
+        if (existing) {
+            return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+        }
+
+        const userData: any = {
+            name,
+            email,
+            role: role || 'USER',
+            credits: parseInt(credits) || 5,
+            isPremium: !!isPremium,
+        };
+
+        if (password) {
+            const bcrypt = require('bcryptjs');
+            userData.password = await bcrypt.hash(password, 10);
+        }
+
+        const user = await prisma.user.create({
+            data: userData,
+        });
+
+        return NextResponse.json({ user });
+    } catch (error) {
+        console.error('User creation error:', error);
+        return NextResponse.json({ error: 'Internal error' }, { status: 500 });
+    }
+}
+
