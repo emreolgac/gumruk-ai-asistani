@@ -1,0 +1,13 @@
+{
+    "Index": {
+        "title": "Customs AI Assistant",
+        "description": "Prepare your customs declarations in seconds with AI support.",
+        "uploadButton": "Upload Document",
+        "analyzeButton": "Analyze"
+    },
+    "Auth": {
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout"
+    }
+}

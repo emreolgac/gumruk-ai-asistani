@@ -1,0 +1,13 @@
+{
+    "Index": {
+        "title": "Gümrük AI Asistanı",
+        "description": "Yapay zeka desteğiyle gümrük beyannamelerinizi saniyeler içinde hazırlayın.",
+        "uploadButton": "Belge Yükle",
+        "analyzeButton": "Analiz Et"
+    },
+    "Auth": {
+        "login": "Giriş Yap",
+        "register": "Kayıt Ol",
+        "logout": "Çıkış Yap"
+    }
+}

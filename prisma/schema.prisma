@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?         // For credentials login
+  accounts      Account[]
+  sessions      Session[]
+  credits       Int             @default(5) // Free credits
+  isPremium     Boolean         @default(false)
+  role          String          @default("USER") // USER or ADMIN
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  declarations  Declaration[]
+  payments      Payment[]
+  apiUsages     ApiUsage[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
+}
+ 
+model Declaration {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  fileName  String
+  fileUrl   String?
+  status    String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  result    String?  // JSON result from AI
+  createdAt DateTime @default(now())
+}
+
+// Payment history model
+model Payment {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  amount        Float
+  currency      String   @default("TRY")
+  status        String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  provider      String   // iyzico, paytr, etc.
+  transactionId String?
+  packageName   String?  // e.g., "Pro", "Enterprise"
+  creditsAdded  Int      @default(0)
+  createdAt     DateTime @default(now())
+}
+
+// Gemini API usage tracking
+model ApiUsage {
+  id           String   @id @default(cuid())
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+  model        String   // gemini-pro, gemini-pro-vision, etc.
+  inputTokens  Int
+  outputTokens Int
+  totalTokens  Int
+  cost         Float    @default(0) // Estimated cost in USD
+  endpoint     String?  // e.g., "analyze", "chat"
+  createdAt    DateTime @default(now())
+}
+
