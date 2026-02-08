@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
+import { startOfDay, startOfWeek, startOfMonth, subDays } from 'date-fns';
 
 export async function GET() {
     try {
@@ -10,7 +11,6 @@ export async function GET() {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // Check if user is admin
         const user = await prisma.user.findUnique({
             where: { email: session.user.email },
             select: { role: true },
@@ -20,55 +20,77 @@ export async function GET() {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        // Get all stats
+        const now = new Date();
+        const today = startOfDay(now);
+        const thisWeek = startOfWeek(now);
+        const thisMonth = startOfMonth(now);
+
         const [
             totalUsers,
-            premiumUsers,
-            totalDeclarations,
+            todayUsers,
+            weekUsers,
             totalPayments,
-            payments,
+            allPayments,
+            totalHits,
+            todayHits,
+            weekHits,
+            monthHits,
             apiUsageStats,
-            todayApiUsage,
+            activeSessions,
+            recentLogs
         ] = await Promise.all([
             prisma.user.count(),
-            prisma.user.count({ where: { isPremium: true } }),
-            prisma.declaration.count(),
+            prisma.user.count({ where: { createdAt: { gte: today } } }),
+            prisma.user.count({ where: { createdAt: { gte: thisWeek } } }),
             prisma.payment.count({ where: { status: 'COMPLETED' } }),
             prisma.payment.findMany({
                 where: { status: 'COMPLETED' },
-                select: { amount: true },
+                select: { amount: true, createdAt: true },
             }),
+            (prisma as any).pageHit.count(),
+            (prisma as any).pageHit.count({ where: { createdAt: { gte: today } } }),
+            (prisma as any).pageHit.count({ where: { createdAt: { gte: thisWeek } } }),
+            (prisma as any).pageHit.count({ where: { createdAt: { gte: thisMonth } } }),
             prisma.apiUsage.aggregate({
-                _sum: {
-                    totalTokens: true,
-                    cost: true,
-                },
+                _sum: { totalTokens: true, cost: true },
                 _count: true,
             }),
-            prisma.apiUsage.count({
-                where: {
-                    createdAt: {
-                        gte: new Date(new Date().setHours(0, 0, 0, 0)),
-                    },
-                },
+            prisma.session.count({ where: { expires: { gte: now } } }),
+            (prisma as any).systemLog.findMany({
+                take: 10,
+                orderBy: { createdAt: 'desc' },
             }),
         ]);
 
-        const totalRevenue = payments.reduce((sum: number, p: { amount: number }) => sum + p.amount, 0);
-
-        return NextResponse.json({
-            totalUsers,
-            premiumUsers,
-            totalDeclarations,
-            totalPayments,
-            totalRevenue,
-            apiUsage: {
-                totalRequests: apiUsageStats._count,
-                totalTokens: apiUsageStats._sum.totalTokens || 0,
-                totalCost: apiUsageStats._sum.cost || 0,
-                todayRequests: todayApiUsage,
+        // Calculate Revenues
+        const stats = {
+            revenue: {
+                today: allPayments.filter(p => p.createdAt >= today).reduce((sum, p) => sum + p.amount, 0),
+                week: allPayments.filter(p => p.createdAt >= thisWeek).reduce((sum, p) => sum + p.amount, 0),
+                month: allPayments.filter(p => p.createdAt >= thisMonth).reduce((sum, p) => sum + p.amount, 0),
+                total: allPayments.reduce((sum, p) => sum + p.amount, 0),
             },
-        });
+            users: {
+                total: totalUsers,
+                today: todayUsers,
+                week: weekUsers,
+                online: activeSessions,
+            },
+            hits: {
+                total: totalHits,
+                today: todayHits,
+                week: weekHits,
+                month: monthHits,
+            },
+            api: {
+                requests: apiUsageStats._count,
+                tokens: apiUsageStats._sum.totalTokens || 0,
+                cost: apiUsageStats._sum.cost || 0,
+            },
+            recentLogs
+        };
+
+        return NextResponse.json(stats);
     } catch (error) {
         console.error('Stats error:', error);
         return NextResponse.json({ error: 'Internal error' }, { status: 500 });

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
+import { getConfig } from '@/lib/config';
+import { logSystem } from '@/lib/logger';
+import { trackHit } from '@/lib/analytics';
 
 // Gemini pricing (per 1M tokens) - approximate for gemini-1.5-flash
 const PRICING = {
@@ -11,11 +14,10 @@ const PRICING = {
 
 export async function POST(request: NextRequest) {
     try {
-        // 1. Authentication Check (Disabled for development/demo ease, but recommended for production)
+        // Track hit for analytics
+        await trackHit('api/analyze');
+
         const session = await auth();
-        // if (!session) {
-        //   return NextResponse.json({ error: 'Bu işlemi yapmak için giriş yapmalısınız.' }, { status: 401 });
-        // }
 
         const formData = await request.formData();
         const files = formData.getAll('files') as File[];
@@ -24,8 +26,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Dosya yüklenmedi.' }, { status: 400 });
         }
 
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = await getConfig('GEMINI_API_KEY');
         if (!apiKey) {
+            await logSystem('ERROR', 'API', 'Gemini API Key missing');
             return NextResponse.json({ error: 'API anahtarı bulunamadı (GEMINI_API_KEY).' }, { status: 500 });
         }
 

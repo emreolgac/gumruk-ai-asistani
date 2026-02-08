@@ -107,3 +107,39 @@ model ApiUsage {
   createdAt    DateTime @default(now())
 }
 
+// Visitor and Hit tracking
+model PageHit {
+  id        String   @id @default(cuid())
+  path      String
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+// Admin Notes
+model AdminNote {
+  id        String   @id @default(cuid())
+  content   String
+  color     String   @default("blue") // yellow, green, red, blue
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Professional Logging
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String   @default("INFO") // INFO, WARN, ERROR
+  source    String   // e.g., "API", "AUTH", "SYSTEM"
+  message   String
+  details   String?  // JSON string
+  createdAt DateTime @default(now())
+}
+
+// System Configurations
+model SystemConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  group     String?  // e.g., "API", "UI", "PAYMENT"
+  updatedAt DateTime @updatedAt
+}

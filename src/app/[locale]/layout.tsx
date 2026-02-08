@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/components/Providers';
 import { Metadata } from 'next';
+import HitTracker from '@/components/HitTracker';
 
 export const metadata: Metadata = {
     title: {
