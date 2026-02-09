@@ -34,6 +34,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'API anahtarı bulunamadı (GEMINI_API_KEY).' }, { status: 500 });
         }
 
+        // Masked logging for troubleshooting
+        const maskedKey = `${apiKey.substring(0, 4)}...${apiKey.substring(apiKey.length - 4)}`;
+        console.log(`Using API Key (masked): ${maskedKey}`);
+
         // 2. Prepare files for Gemini
         const fileParts = await Promise.all(
             files.map(async (file) => {
