@@ -129,7 +129,7 @@ export default function SiteSettingsPage() {
                                         key={key}
                                         configKey={key}
                                         initialValue={config?.value || ''}
-                                        onSave={(val) => handleSave(key, val, group.id)}
+                                        onSave={(val: string) => handleSave(key, val, group.id)}
                                         isSaving={saving === key}
                                     />
                                 )

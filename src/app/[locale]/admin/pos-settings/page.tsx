@@ -98,7 +98,7 @@ export default function PosSettingsPage() {
                                         label={key.replace(group.id + '_', '').replace(/_/g, ' ')}
                                         configKey={key}
                                         initialValue={config?.value || ''}
-                                        onSave={(val) => handleSave(key, val, 'PAYMENT')}
+                                        onSave={(val: string) => handleSave(key, val, 'PAYMENT')}
                                         isSaving={saving === key}
                                     />
                                 );
