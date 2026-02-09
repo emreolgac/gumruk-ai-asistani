@@ -12,7 +12,7 @@ const PRICING = {
     output: 0.30 / 1000000,
 };
 
-const MODEL_NAME = "gemini-1.5-flash-latest"; // Updated for better compatibility
+const MODEL_NAME = "gemini-1.5-flash"; // Reverting to stable identifier
 
 export async function POST(request: NextRequest) {
     try {
@@ -50,7 +50,8 @@ export async function POST(request: NextRequest) {
 
         // 3. Call Gemini API
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+        // Explicitly using v1 to avoid v1beta issues observed in logs
+        const model = genAI.getGenerativeModel({ model: MODEL_NAME }, { apiVersion: 'v1' });
 
         const prompt = `
       Sen uzman bir gümrük müşaviri yardımcısısın. 
