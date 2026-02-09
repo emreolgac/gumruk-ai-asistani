@@ -64,24 +64,50 @@ export async function POST(request: NextRequest) {
       Sadece saf JSON çıktısı ver, markdown ('''json) kullanma.
     `;
 
-        // 3. Call Gemini API with Fallback Logic
+        // 3. Call Gemini API with Discovery & Fallback
         const genAI = new GoogleGenerativeAI(apiKey);
         let result;
         let activeModel = MODEL_NAME;
 
+        async function tryAnalyze(modelId: string) {
+            console.log(`Analyzing with: ${modelId}`);
+            const model = genAI.getGenerativeModel({ model: modelId });
+            return await model.generateContent([prompt, ...fileParts]);
+        }
+
         try {
-            console.log(`Analyzing with: ${activeModel}`);
-            const model = genAI.getGenerativeModel({ model: activeModel });
-            result = await model.generateContent([prompt, ...fileParts]);
+            result = await tryAnalyze(activeModel);
         } catch (initialError: any) {
             console.error(`Gemini Error (${activeModel}):`, initialError.message);
 
             if (initialError.message?.includes('404')) {
-                // Fallback 1: specific version
-                activeModel = "gemini-1.5-flash";
-                console.log(`Fallback 1: Trying ${activeModel}`);
-                const model = genAI.getGenerativeModel({ model: activeModel });
-                result = await model.generateContent([prompt, ...fileParts]);
+                // Try to discover valid models
+                try {
+                    console.log("Attempting model discovery...");
+                    // Note: listModels is a property of the GenAI object in modern SDKs
+                    // We'll try to guess a few common ones first for speed
+                    const candidateModels = [
+                        "gemini-1.5-flash-002",
+                        "gemini-1.5-flash-001",
+                        "gemini-1.5-flash-8b",
+                        "gemini-1.0-pro"
+                    ];
+
+                    for (const candidate of candidateModels) {
+                        try {
+                            console.log(`Trying candidate fallback: ${candidate}`);
+                            activeModel = candidate;
+                            result = await tryAnalyze(candidate);
+                            if (result) break;
+                        } catch (e) {
+                            console.error(`Candidate ${candidate} failed:`, (e as any).message);
+                        }
+                    }
+                } catch (discoveryError) {
+                    console.error("Discovery failed:", discoveryError);
+                }
+
+                if (!result) throw initialError;
             } else {
                 throw initialError;
             }
