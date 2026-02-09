@@ -12,7 +12,7 @@ const PRICING = {
     output: 0.30 / 1000000,
 };
 
-const MODEL_NAME = "gemini-1.5-flash-002"; // Trying a more specific stable version
+const MODEL_NAME = "gemini-1.5-flash-latest";
 
 export async function POST(request: NextRequest) {
     try {
@@ -48,10 +48,6 @@ export async function POST(request: NextRequest) {
             })
         );
 
-        // 3. Call Gemini API
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-
         const prompt = `
       Sen uzman bir gümrük müşaviri yardımcısısın. 
       Ekteki belgeleri dikkatlice analiz et (Fatura, Ordino, Çeki Listesi vb.).
@@ -68,7 +64,29 @@ export async function POST(request: NextRequest) {
       Sadece saf JSON çıktısı ver, markdown ('''json) kullanma.
     `;
 
-        const result = await model.generateContent([prompt, ...fileParts]);
+        // 3. Call Gemini API with Fallback Logic
+        const genAI = new GoogleGenerativeAI(apiKey);
+        let result;
+        let activeModel = MODEL_NAME;
+
+        try {
+            console.log(`Analyzing with: ${activeModel}`);
+            const model = genAI.getGenerativeModel({ model: activeModel });
+            result = await model.generateContent([prompt, ...fileParts]);
+        } catch (initialError: any) {
+            console.error(`Gemini Error (${activeModel}):`, initialError.message);
+
+            if (initialError.message?.includes('404')) {
+                // Fallback 1: specific version
+                activeModel = "gemini-1.5-flash";
+                console.log(`Fallback 1: Trying ${activeModel}`);
+                const model = genAI.getGenerativeModel({ model: activeModel });
+                result = await model.generateContent([prompt, ...fileParts]);
+            } else {
+                throw initialError;
+            }
+        }
+
         const responseText = result.response.text();
 
         // 4. Track API Usage
@@ -95,7 +113,7 @@ export async function POST(request: NextRequest) {
             await prisma.apiUsage.create({
                 data: {
                     userId,
-                    model: MODEL_NAME,
+                    model: activeModel,
                     inputTokens,
                     outputTokens,
                     totalTokens,
@@ -130,14 +148,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ result: parsedResult });
 
     } catch (error: any) {
-        console.error('Analyze API Error:', error);
+        console.error('Analyze API Error final check:', error.message);
 
         // Detailed error for 404 to help the user identify available models
         if (error.message?.includes('404') || error.message?.includes('not found')) {
             return NextResponse.json({
                 error: 'Yapay zeka modeli bulunamadı (404).',
-                details: 'Google Gemini API anahtarınız bu modeli desteklemiyor olabilir veya model ismi değişmiş olabilir.',
-                hint: 'Vercel üzerindeki GEMINI_API_KEY\'in doğruluğunu ve Google AI Studio\'daki kota durumunuzu kontrol edin.'
+                details: `Girdiğiniz API anahtarı seçilen modelleri desteklemiyor olabilir. Hata: ${error.message}`,
+                hint: 'Lütfen Google AI Studio (aistudio.google.com) üzerinden "Gemini 1.5 Flash" modelinin aktif olduğundan ve anahtarın doğru kopyalandığından emin olun.'
             }, { status: 404 });
         }
 
