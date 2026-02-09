@@ -46,6 +46,10 @@ export async function POST(request: Request) {
 
     } catch (error: any) {
         console.error('Registration error:', error);
-        return NextResponse.json({ error: 'Sunucu hatası oluştu.' }, { status: 500 });
+        return NextResponse.json({
+            error: 'Sunucu hatası oluştu.',
+            details: error.message,
+            code: error.code
+        }, { status: 500 });
     }
 }
