@@ -72,3 +72,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     debug: process.env.NODE_ENV === "development" || true, // Enable for now to help the user
 })
+// End of auth config - Vercel trigger commit
