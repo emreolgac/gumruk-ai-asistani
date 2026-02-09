@@ -14,6 +14,8 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?         // For credentials login
+  phone         String?
+  company       String?
   accounts      Account[]
   sessions      Session[]
   credits       Int             @default(5) // Free credits

@@ -6,7 +6,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, ArrowRight, Github, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Github, Loader2, Phone, Building } from 'lucide-react';
 
 export default function RegisterPage() {
     const t = useTranslations('Auth');
@@ -17,6 +17,8 @@ export default function RegisterPage() {
         name: '',
         email: '',
         password: '',
+        phone: '',
+        company: '',
     });
 
     const handleGoogleLogin = async () => {
@@ -125,7 +127,7 @@ export default function RegisterPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-blue-200/50 uppercase tracking-widest px-1">AD SOYAD</label>
+                            <label className="text-[10px] font-black text-blue-200/50 uppercase tracking-widest px-1">İSİM SOYİSİM</label>
                             <div className="relative group">
                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-200/30 group-focus-within:text-blue-400 transition-colors" />
                                 <input
@@ -134,7 +136,37 @@ export default function RegisterPage() {
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 text-white placeholder-white/20 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-bold"
-                                    placeholder="Emre Olgaç"
+                                    placeholder="İsim Soyisim"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-blue-200/50 uppercase tracking-widest px-1">ŞİRKET ADI</label>
+                            <div className="relative group">
+                                <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-200/30 group-focus-within:text-blue-400 transition-colors" />
+                                <input
+                                    required
+                                    type="text"
+                                    value={formData.company}
+                                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                    className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 text-white placeholder-white/20 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-bold"
+                                    placeholder="Lojistik A.Ş."
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-blue-200/50 uppercase tracking-widest px-1">TELEFON</label>
+                            <div className="relative group">
+                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-200/30 group-focus-within:text-blue-400 transition-colors" />
+                                <input
+                                    required
+                                    type="tel"
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    className="w-full h-14 bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 text-white placeholder-white/20 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-bold"
+                                    placeholder="05XX XXX XX XX"
                                 />
                             </div>
                         </div>

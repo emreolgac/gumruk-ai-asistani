@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
     try {
-        const { name, email, password } = await request.json();
+        const { name, email, password, phone, company } = await request.json();
 
         if (!email || !password || !name) {
             return NextResponse.json({ error: 'Eksik bilgi girdiniz.' }, { status: 400 });
@@ -28,6 +28,8 @@ export async function POST(request: Request) {
                 name,
                 email,
                 password: hashedPassword,
+                phone,
+                company,
                 credits: 5, // Free credits
             },
         });
