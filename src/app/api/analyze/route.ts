@@ -12,7 +12,7 @@ const PRICING = {
     output: 0.30 / 1000000,
 };
 
-const MODEL_NAME = "gemini-1.5-flash"; // Reverting to stable identifier
+const MODEL_NAME = "gemini-1.5-flash-002"; // Trying a more specific stable version
 
 export async function POST(request: NextRequest) {
     try {
@@ -50,8 +50,7 @@ export async function POST(request: NextRequest) {
 
         // 3. Call Gemini API
         const genAI = new GoogleGenerativeAI(apiKey);
-        // Explicitly using v1 to avoid v1beta issues observed in logs
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME }, { apiVersion: 'v1' });
+        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
         const prompt = `
       Sen uzman bir gümrük müşaviri yardımcısısın. 
@@ -132,6 +131,16 @@ export async function POST(request: NextRequest) {
 
     } catch (error: any) {
         console.error('Analyze API Error:', error);
+
+        // Detailed error for 404 to help the user identify available models
+        if (error.message?.includes('404') || error.message?.includes('not found')) {
+            return NextResponse.json({
+                error: 'Yapay zeka modeli bulunamadı (404).',
+                details: 'Google Gemini API anahtarınız bu modeli desteklemiyor olabilir veya model ismi değişmiş olabilir.',
+                hint: 'Vercel üzerindeki GEMINI_API_KEY\'in doğruluğunu ve Google AI Studio\'daki kota durumunuzu kontrol edin.'
+            }, { status: 404 });
+        }
+
         return NextResponse.json({ error: error.message || 'Bir hata oluştu.' }, { status: 500 });
     }
 }
