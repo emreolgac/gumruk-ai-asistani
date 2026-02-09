@@ -12,7 +12,7 @@ const PRICING = {
     output: 0.30 / 1000000,
 };
 
-const MODEL_NAME = "gemini-2.0-flash";
+const MODEL_NAME = "gemini-flash-latest";
 
 export async function POST(request: NextRequest) {
     try {
