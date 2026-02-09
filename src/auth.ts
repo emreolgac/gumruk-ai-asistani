@@ -10,6 +10,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session: {
         strategy: "jwt", // Required for Credentials provider
     },
+    secret: process.env.AUTH_SECRET,
     trustHost: true,
     providers: [
         Google({
