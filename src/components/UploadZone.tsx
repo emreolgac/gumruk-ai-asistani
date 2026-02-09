@@ -7,7 +7,7 @@ import { Upload, FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-reac
 interface UploadZoneProps {
     onAnalysisStart: () => void;
     onAnalysisComplete: (result: any) => void;
-    onError: (error: string) => void;
+    onError: (error: string, details?: string, hint?: string) => void;
 }
 
 export default function UploadZone({ onAnalysisStart, onAnalysisComplete, onError }: UploadZoneProps) {
@@ -51,13 +51,15 @@ export default function UploadZone({ onAnalysisStart, onAnalysisComplete, onErro
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || 'Analiz sırasında bir hata oluştu.');
+                // Return full error info if available
+                onError(data.error || 'Analiz hatası', data.details, data.hint);
+                return;
             }
 
             onAnalysisComplete(data.result);
         } catch (error: any) {
             console.error(error);
-            onError(error.message);
+            onError('Bağlantı hatası veya sunucu yanıt vermiyor.');
         } finally {
             setIsUploading(false);
         }

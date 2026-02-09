@@ -12,7 +12,8 @@ import {
     Search,
     Zap,
     ArrowLeft,
-    Mail
+    Mail,
+    AlertCircle
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -29,7 +30,11 @@ export default function NewDeclarationPage() {
     const [data, setData] = useState<DashboardData | null>(null);
     const [loading, setLoading] = useState(true);
     const [analysisResult, setAnalysisResult] = useState<any>(null);
+
+    // Error states
     const [error, setError] = useState<string | null>(null);
+    const [errorDetails, setErrorDetails] = useState<string | null>(null);
+    const [errorHint, setErrorHint] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -63,7 +68,7 @@ export default function NewDeclarationPage() {
 
     return (
         <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex overflow-hidden">
-            {/* Sidebar (Simplified copy for consistency) */}
+            {/* Sidebar */}
             <aside className="w-80 bg-white border-r border-slate-100 flex flex-col shrink-0 hidden lg:flex">
                 <div className="p-8 border-b border-slate-50">
                     <Link href="/tr" className="flex items-center gap-3">
@@ -117,9 +122,24 @@ export default function NewDeclarationPage() {
 
                     <div className="bg-white p-8 lg:p-12 rounded-[3.5rem] shadow-sm border border-slate-100">
                         {error && (
-                            <div className="mb-8 p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 font-bold text-sm flex items-center gap-3">
-                                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                                {error}
+                            <div className="mb-8 space-y-4">
+                                <div className="p-6 bg-red-50 text-red-600 rounded-3xl border border-red-100 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 bg-red-100 rounded-2xl flex items-center justify-center shrink-0">
+                                            <AlertCircle className="w-6 h-6 text-red-600" />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="font-black text-lg leading-tight">{error}</p>
+                                            {errorDetails && <p className="text-sm font-medium opacity-80">{errorDetails}</p>}
+                                        </div>
+                                    </div>
+                                    {errorHint && (
+                                        <div className="mt-4 p-4 bg-white/50 rounded-2xl border border-red-200/50 text-[13px] font-bold text-red-800 flex items-center gap-3">
+                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                                            {errorHint}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
 
@@ -128,13 +148,17 @@ export default function NewDeclarationPage() {
                                 onAnalysisStart={() => {
                                     setLoading(true);
                                     setError(null);
+                                    setErrorDetails(null);
+                                    setErrorHint(null);
                                 }}
                                 onAnalysisComplete={(result) => {
                                     setAnalysisResult(result);
                                     setLoading(false);
                                 }}
-                                onError={(err) => {
+                                onError={(err, details, hint) => {
                                     setError(err);
+                                    setErrorDetails(details || null);
+                                    setErrorHint(hint || null);
                                     setLoading(false);
                                 }}
                             />
