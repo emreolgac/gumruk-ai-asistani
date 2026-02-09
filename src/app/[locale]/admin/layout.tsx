@@ -22,7 +22,9 @@ import {
     Link2,
     Menu,
     X,
-    CreditCard as POSIcon
+    CreditCard as POSIcon,
+    Trash2,
+    Image as ImageIcon
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -79,9 +81,11 @@ export default function AdminLayout({
         { href: '/tr/admin/pos-settings', label: 'Sanal POS Ayarları', icon: <POSIcon className="w-5 h-5" /> },
         { href: '/tr/admin/api-usage', label: 'API Kullanımı', icon: <Bot className="w-5 h-5" /> },
         { href: '/tr/admin/pages', label: 'Sayfalar', icon: <FileText className="w-5 h-5" /> },
+        { href: '/tr/admin/banners', label: 'Banner Yönetimi', icon: <ImageIcon className="w-5 h-5" /> },
         { href: '/tr/admin/social', label: 'Sosyal Medya', icon: <Link2 className="w-5 h-5" /> },
         { href: '/tr/admin/blogs', label: 'Blog Yönetimi', icon: <BookOpen className="w-5 h-5" /> },
         { href: '/tr/admin/logs', label: 'Sistem Logları', icon: <Terminal className="w-5 h-5" /> },
+        { href: '/tr/admin/pricing', label: 'Fiyatlandırma', icon: <CreditCard className="w-5 h-5" /> },
         { href: '/tr/admin/settings', label: 'Sistem Ayarları', icon: <Settings className="w-5 h-5" /> },
     ];
 

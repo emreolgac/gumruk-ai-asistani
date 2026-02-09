@@ -36,14 +36,18 @@ import {
   Layers
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [plans, setPlans] = useState<any[]>([]);
 
   useEffect(() => {
     fetch('/api/admin/blogs?active=true').then(res => res.json()).then(data => setBlogs(data.slice(0, 3)));
+    fetch('/api/admin/pricing').then(res => res.json()).then(data => setPlans(data));
   }, []);
 
   return (
@@ -230,21 +234,46 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <PriceCard
-              title="Profesyonel"
-              price="₺1,499"
-              credits="100 Kredi"
-              features={['Sınırsız Dil Desteği', 'ERP Entegrasyonu', 'Öncelikli İşleme', '30 Gün Saklama', 'GTİP Analizörü']}
-              cta="Hemen Satın Al"
-              highlight
-            />
-            <PriceCard
-              title="Kurumsal"
-              price="Özel"
-              credits="Limitsiz"
-              features={['Özel AI Modeli Eğitimi', 'Tam API Erişimi', '7/24 Teknik Danışman', 'Sınırsız Arşivleme', 'Özel SLA Anlaşması']}
-              cta="Bize Ulaşın"
-            />
+            {plans.length > 0 ? (
+              plans.map((p) => (
+                <PriceCard
+                  key={p.id}
+                  title={p.title}
+                  price={p.price}
+                  credits={p.credits}
+                  features={p.features.split(',')}
+                  cta={p.price === 'Özel' ? 'Bize Ulaşın' : 'Hemen Satın Al'}
+                  highlight={p.isHighlighted}
+                  onClick={() => {
+                    if (p.price === 'Özel') {
+                      router.push('/tr/contact');
+                    } else {
+                      router.push('/tr/login');
+                    }
+                  }}
+                />
+              ))
+            ) : (
+              <>
+                <PriceCard
+                  title="Profesyonel"
+                  price="₺1,499"
+                  credits="100 Kredi"
+                  features={['Sınırsız Dil Desteği', 'ERP Entegrasyonu', 'Öncelikli İşleme', '30 Gün Saklama', 'GTİP Analizörü']}
+                  cta="Hemen Satın Al"
+                  highlight
+                  onClick={() => router.push('/tr/login')}
+                />
+                <PriceCard
+                  title="Kurumsal"
+                  price="Özel"
+                  credits="Limitsiz"
+                  features={['Özel AI Modeli Eğitimi', 'Tam API Erişimi', '7/24 Teknik Danışman', 'Sınırsız Arşivleme', 'Özel SLA Anlaşması']}
+                  cta="Bize Ulaşın"
+                  onClick={() => router.push('/tr/contact')}
+                />
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -449,7 +478,7 @@ function WorkflowStep({ number, title, desc, icon }: any) {
   );
 }
 
-function PriceCard({ title, price, credits, features, cta, highlight, light }: any) {
+function PriceCard({ title, price, credits, features, cta, highlight, onClick }: any) {
   return (
     <div className={`p-10 lg:p-12 rounded-[3.5rem] border ${highlight ? 'bg-blue-600 border-blue-500 scale-105 shadow-[0_30px_60px_-15px_rgba(59,130,246,0.3)]' : 'bg-white/[0.03] border-white/5'} flex flex-col relative`}>
       {highlight && <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-white text-blue-600 text-[10px] font-black rounded-full uppercase tracking-widest whitespace-nowrap">En Çok Tercih Edilen</div>}
@@ -470,7 +499,10 @@ function PriceCard({ title, price, credits, features, cta, highlight, light }: a
           </li>
         ))}
       </ul>
-      <button className={`w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-95 ${highlight ? 'bg-white text-blue-600 hover:bg-gray-100' : 'bg-blue-600 text-white hover:bg-blue-500 shadow-xl shadow-blue-600/20'}`}>
+      <button
+        onClick={onClick}
+        className={`w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-95 ${highlight ? 'bg-white text-blue-600 hover:bg-gray-100' : 'bg-blue-600 text-white hover:bg-blue-500 shadow-xl shadow-blue-600/20'}`}
+      >
         {cta}
       </button>
     </div>
