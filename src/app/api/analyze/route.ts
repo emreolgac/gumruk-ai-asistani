@@ -8,9 +8,11 @@ import { trackHit } from '@/lib/analytics';
 
 // Gemini pricing (per 1M tokens) - approximate for gemini-1.5-flash
 const PRICING = {
-    input: 0.075 / 1000000,  // $0.075 per 1M input tokens
-    output: 0.30 / 1000000,  // $0.30 per 1M output tokens
+    input: 0.075 / 1000000,
+    output: 0.30 / 1000000,
 };
+
+const MODEL_NAME = "gemini-1.5-flash-latest"; // Updated for better compatibility
 
 export async function POST(request: NextRequest) {
     try {
@@ -48,7 +50,7 @@ export async function POST(request: NextRequest) {
 
         // 3. Call Gemini API
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
         const prompt = `
       Sen uzman bir gümrük müşaviri yardımcısısın. 
@@ -93,7 +95,7 @@ export async function POST(request: NextRequest) {
             await prisma.apiUsage.create({
                 data: {
                     userId,
-                    model: 'gemini-1.5-flash',
+                    model: MODEL_NAME,
                     inputTokens,
                     outputTokens,
                     totalTokens,
