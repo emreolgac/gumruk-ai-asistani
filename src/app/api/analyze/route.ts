@@ -12,7 +12,7 @@ const PRICING = {
     output: 0.30 / 1000000,
 };
 
-const MODEL_NAME = "gemini-1.5-flash-latest";
+const MODEL_NAME = "gemini-2.0-flash";
 
 export async function POST(request: NextRequest) {
     try {
@@ -34,9 +34,6 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'API anahtarı bulunamadı (GEMINI_API_KEY).' }, { status: 500 });
         }
 
-        // Masked logging for troubleshooting
-        const maskedKey = `${apiKey.substring(0, 4)}...${apiKey.substring(apiKey.length - 4)}`;
-        console.log(`Using API Key (masked): ${maskedKey}`);
 
         // 2. Prepare files for Gemini
         const fileParts = await Promise.all(
@@ -91,10 +88,10 @@ export async function POST(request: NextRequest) {
                     // Note: listModels is a property of the GenAI object in modern SDKs
                     // We'll try to guess a few common ones first for speed
                     const candidateModels = [
-                        "gemini-1.5-flash-002",
-                        "gemini-1.5-flash-001",
-                        "gemini-1.5-flash-8b",
-                        "gemini-1.0-pro"
+                        "gemini-2.5-flash",
+                        "gemini-flash-latest",
+                        "gemini-2.0-flash-lite",
+                        "gemini-2.0-flash-001"
                     ];
 
                     for (const candidate of candidateModels) {
