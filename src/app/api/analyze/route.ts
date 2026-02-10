@@ -254,6 +254,29 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // 5. Save to Database for History
+        try {
+            if (session?.user?.email) {
+                const user = await prisma.user.findUnique({
+                    where: { email: session.user.email },
+                    select: { id: true },
+                });
+
+                if (user) {
+                    await prisma.declaration.create({
+                        data: {
+                            userId: user.id,
+                            fileName: files.map(f => f.name).join(', '),
+                            status: 'COMPLETED',
+                            result: JSON.stringify(parsedResult),
+                        }
+                    });
+                }
+            }
+        } catch (dbError) {
+            console.error("Failed to save declaration to history:", dbError);
+        }
+
         return NextResponse.json({ result: parsedResult });
 
     } catch (error: any) {

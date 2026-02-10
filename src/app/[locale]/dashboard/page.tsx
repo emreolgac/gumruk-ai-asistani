@@ -90,32 +90,35 @@ export default function UserDashboard() {
         <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex overflow-hidden">
 
             {/* Sidebar */}
-            <aside className="w-80 bg-white border-r border-slate-100 flex flex-col shrink-0 hidden lg:flex">
-                <div className="p-8 border-b border-slate-50">
-                    <Link href="/tr" className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <aside className="w-80 bg-[#0f172a] flex flex-col shrink-0 hidden lg:flex border-r border-slate-800">
+                <div className="p-8 border-b border-white/5">
+                    <Link href="/tr" className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40 transform hover:rotate-6 transition-transform">
                             <FileSearch className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-xl font-black tracking-tighter text-slate-800">GÜMRÜK.AI</span>
+                        <div className="flex flex-col">
+                            <span className="text-xl font-black tracking-tighter text-white leading-none">GÜMRÜK.AI</span>
+                            <span className="text-[10px] font-bold text-blue-400/60 uppercase tracking-widest mt-1">Smart Logistics</span>
+                        </div>
                     </Link>
                 </div>
 
-                <div className="p-6 flex-1 space-y-2">
+                <div className="p-6 flex-1 space-y-3">
                     <SidebarLink icon={<FileSearch className="w-5 h-5" />} label="Genel Bakış" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
                     <SidebarLink icon={<History className="w-5 h-5" />} label="İşlem Geçmişi" active={activeTab === 'history'} onClick={() => setActiveTab('history')} />
                     <SidebarLink icon={<CreditCard className="w-5 h-5" />} label="Ödemelerim" active={activeTab === 'payments'} onClick={() => setActiveTab('payments')} />
                     <SidebarLink icon={<Settings className="w-5 h-5" />} label="Profil Ayarları" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
 
                     <div className="pt-8 pb-4">
-                        <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Destek Merkezi</p>
+                        <p className="px-6 text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 px-4">Destek Merkezi</p>
                         <SidebarLink icon={<HelpCircle className="w-5 h-5" />} label="Yardım Al" onClick={() => router.push('/tr/contact')} />
                         <SidebarLink icon={<Mail className="w-5 h-5" />} label="Bize Yazın" onClick={() => router.push('/tr/contact')} />
                     </div>
                 </div>
 
-                <div className="p-6 border-t border-slate-50">
-                    <button onClick={handleLogout} className="w-full flex items-center gap-4 px-4 py-4 text-slate-400 hover:bg-red-50 hover:text-red-500 rounded-2xl font-bold transition-all">
-                        <LogOut className="w-5 h-5" />
+                <div className="p-6 border-t border-white/5">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-red-500/10 hover:text-red-400 rounded-2xl font-black transition-all group">
+                        <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                         Oturumu Kapat
                     </button>
                 </div>
@@ -125,28 +128,28 @@ export default function UserDashboard() {
             <main className="flex-1 overflow-y-auto h-screen custom-scrollbar">
 
                 {/* Top Header */}
-                <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-8 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4 lg:hidden">
-                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                            <FileSearch className="w-5 h-5 text-white" />
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 bg-slate-50 px-5 py-2.5 rounded-2xl border border-slate-100 max-w-lg flex-1 mx-8 hidden sm:flex">
+                <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-3 bg-slate-100/50 px-6 py-3 rounded-2xl border border-slate-200/50 max-w-lg flex-1 hidden sm:flex focus-within:ring-4 focus-within:ring-blue-500/5 focus-within:border-blue-500/50 transition-all">
                         <Search className="w-4 h-4 text-slate-400" />
-                        <input type="text" placeholder="İşlem numarası veya dosya adı ara..." className="bg-transparent border-none outline-none text-xs font-bold w-full" />
+                        <input type="text" placeholder="İşlem veya dosya ara..." className="bg-transparent border-none outline-none text-sm font-bold w-full text-slate-700 placeholder:text-slate-400" />
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-8">
                         <div className="flex flex-col items-end hidden md:flex">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kredi Bakiyesi</span>
-                            <span className="text-sm font-black text-blue-600 flex items-center gap-2">
-                                <Zap className="w-4 h-4 fill-blue-600" />
-                                {data.user.credits} KREDİ
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Kullanılabilir Bakiye</span>
+                            <span className="text-lg font-black text-slate-900 flex items-center gap-2 leading-none">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                {data.user.credits} <span className="text-blue-600">KREDİ</span>
                             </span>
                         </div>
-                        <div className="w-10 h-10 bg-slate-100 rounded-xl overflow-hidden border border-slate-200">
-                            {data.user.image ? <img src={data.user.image} alt="" /> : <div className="w-full h-full flex items-center justify-center font-black text-slate-400">{data.user.name[0]}</div>}
+                        <div className="w-12 h-12 bg-white border-2 border-slate-100 rounded-2xl overflow-hidden shadow-lg shadow-slate-200/50 flex items-center justify-center group cursor-pointer hover:border-blue-500 transition-all">
+                            {data.user.image ? (
+                                <img src={data.user.image} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center font-black text-slate-400 bg-slate-50 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all uppercase">
+                                    {data.user.name?.[0]}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>
@@ -176,36 +179,45 @@ export default function UserDashboard() {
                                 {/* Stats Row */}
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <SimpleStat label="TOPLAM YÜKLEME" value={data.stats.totalUploads} icon={<Upload className="w-5 h-5 text-blue-600" />} />
-                                    <SimpleStat label="KALAN KREDİ" value={data.user.credits} icon={<Zap className="w-5 h-5 text-orange-500" />} />
-                                    <SimpleStat label="HARCANAN TUTAR" value={`${data.stats.totalSpend} ₺`} icon={<TrendingUp className="w-5 h-5 text-green-600" />} />
+                                    <SimpleStat label="KALAN KREDİ" value={data.user.credits} icon={<Zap className="w-5 h-5 text-indigo-500" />} />
+                                    <SimpleStat label="HARCANAN TUTAR" value={`${data.stats.totalSpend} ₺`} icon={<TrendingUp className="w-5 h-5 text-emerald-600" />} />
                                 </div>
 
                                 {/* Upload Area */}
-                                <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100 relative overflow-hidden group">
-                                    <div className="absolute right-[-10%] top-[-10%] w-64 h-64 bg-blue-600/[0.03] blur-[80px] rounded-full group-hover:scale-150 transition-transform duration-1000" />
+                                <div className="bg-white p-12 rounded-[3.5rem] shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-700">
+                                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full -mr-48 -mt-48 blur-3xl group-hover:bg-blue-600/10 transition-all duration-1000" />
+                                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-600/5 rounded-full -ml-32 -mb-32 blur-3xl group-hover:bg-indigo-600/10 transition-all duration-1000" />
+
                                     <div className="relative z-10 flex flex-col items-center text-center">
-                                        <div className="w-20 h-20 bg-blue-50 rounded-[2rem] flex items-center justify-center mb-8">
-                                            <Upload className="w-8 h-8 text-blue-600" />
+                                        <div className="w-24 h-24 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-[2.5rem] flex items-center justify-center mb-8 shadow-inner transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                                            <Upload className="w-10 h-10 text-blue-600" />
                                         </div>
-                                        <h2 className="text-3xl font-black text-slate-800 mb-2">Yeni Beyanname Oluştur</h2>
-                                        <p className="text-slate-400 font-medium mb-12">Belgelerinizi yükleyin, yapay zeka sizin için saniyeler içinde analiz etsin.</p>
-                                        <button onClick={() => router.push('/tr/dashboard/new')} className="px-12 py-5 bg-blue-600 hover:bg-black text-white rounded-[2rem] font-black transition-all shadow-xl shadow-blue-600/20 active:scale-95 flex items-center gap-3">
-                                            DOSYALARI SEÇİN
-                                            <Plus className="w-5 h-5" />
+                                        <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">Yeni Analiz <span className="text-blue-600">Başlat</span></h2>
+                                        <p className="text-slate-500 font-medium mb-12 max-w-lg text-lg">Belgelerinizi yükleyin, yapay zeka motorumuz saniyeler içinde GTİP ve beyanname taslağınızı hazırlasın.</p>
+                                        <button onClick={() => router.push('/tr/dashboard/new')} className="px-14 py-6 bg-slate-900 hover:bg-blue-600 text-white rounded-[2rem] font-black transition-all shadow-xl shadow-slate-900/10 active:scale-95 flex items-center gap-4 text-lg">
+                                            İşlemi Başlat
+                                            <ArrowRight className="w-6 h-6" />
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Recent History */}
                                 <div className="space-y-6">
-                                    <div className="flex items-center justify-between px-4">
-                                        <h3 className="text-xl font-black text-slate-800">Son İşlemler</h3>
-                                        <button onClick={() => setActiveTab('history')} className="text-blue-600 font-black text-xs uppercase tracking-widest hover:underline">TÜMÜNÜ GÖR</button>
+                                    <div className="flex items-center justify-between px-6">
+                                        <h3 className="text-2xl font-black text-slate-800 tracking-tight">Son İşlemler</h3>
+                                        <button onClick={() => setActiveTab('history')} className="text-blue-600 font-black text-[10px] uppercase tracking-widest hover:underline px-4 py-2 bg-blue-50 rounded-xl transition-all">Tümünü Gör</button>
                                     </div>
-                                    <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden divide-y divide-slate-50 shadow-sm">
+                                    <div className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden divide-y divide-slate-50 shadow-sm hover:shadow-xl transition-shadow">
                                         {data.history.length > 0 ? data.history.map((h: any) => (
                                             <HistoryRow key={h.id} declaration={h} />
-                                        )) : <div className="p-12 text-center text-slate-400 font-bold">Henüz işlem yok.</div>}
+                                        )) : (
+                                            <div className="p-20 text-center">
+                                                <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-200">
+                                                    <History className="w-10 h-10" />
+                                                </div>
+                                                <p className="text-slate-400 font-black text-sm uppercase tracking-widest">Henüz bir işleminiz bulunmuyor.</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -254,53 +266,107 @@ export default function UserDashboard() {
                     )}
 
                     {activeTab === 'history' && (
-                        <div className="space-y-6">
-                            <h3 className="text-2xl font-black text-slate-800">Tüm İşlem Geçmişi</h3>
-                            <div className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden divide-y divide-slate-50 shadow-sm">
-                                {data.history.map((h: any) => (
+                        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-5 duration-500">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-3xl font-black text-slate-900 tracking-tight">Tüm İşlem <span className="text-blue-600">Geçmişi</span></h3>
+                                <div className="flex items-center gap-4">
+                                    <div className="bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3 text-sm font-bold text-slate-500 cursor-pointer hover:bg-slate-50 transition-all">
+                                        <Clock className="w-4 h-4" />
+                                        Filtrele
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-white rounded-[3.5rem] border border-slate-100 overflow-hidden divide-y divide-slate-50 shadow-sm hover:shadow-xl transition-all">
+                                {data.history.length > 0 ? data.history.map((h: any) => (
                                     <HistoryRow key={h.id} declaration={h} detailed />
-                                ))}
+                                )) : (
+                                    <div className="p-32 text-center">
+                                        <div className="w-24 h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 text-slate-200">
+                                            <History className="w-12 h-12" />
+                                        </div>
+                                        <p className="text-slate-400 font-black text-sm uppercase tracking-widest">Henüz bir işlem kaydınız bulunmuyor.</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
 
                     {activeTab === 'payments' && (
-                        <div className="space-y-6">
-                            <h3 className="text-2xl font-black text-slate-800">Ödeme Kayıtları</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-5 duration-500">
+                            <h3 className="text-3xl font-black text-slate-900 tracking-tight">Ödeme <span className="text-blue-600">Kayıtları</span></h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {data.payments.map((p: any) => (
                                     <PaymentCard key={p.id} payment={p} />
                                 ))}
-                                {data.payments.length === 0 && <div className="lg:col-span-3 p-24 text-center text-slate-400 font-bold border-4 border-dashed rounded-[3rem]">Henüz bir ödeme kaydı bulunmuyor.</div>}
+                                {data.payments.length === 0 && (
+                                    <div className="lg:col-span-3 p-32 text-center text-slate-300 font-black border-4 border-dashed rounded-[3.5rem] border-slate-100 uppercase tracking-widest text-sm bg-slate-50/30">
+                                        Henüz bir ödeme kaydı bulunmuyor.
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
 
                     {activeTab === 'settings' && (
-                        <div className="max-w-3xl space-y-10">
-                            <h3 className="text-2xl font-black text-slate-800">Profil Ayarları</h3>
-                            <div className="bg-white p-10 rounded-[3rem] border border-slate-100 space-y-10">
-                                <div className="flex items-center gap-10">
-                                    <div className="w-32 h-32 bg-slate-100 rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl flex items-center justify-center">
-                                        {data.user.image ? <img src={data.user.image} alt="" className="w-full h-full object-cover" /> : <User className="w-12 h-12 text-slate-300" />}
+                        <div className="max-w-4xl space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-700">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-3xl font-black text-slate-900 tracking-tight">Profil <span className="text-blue-600">Ayarları</span></h3>
+                            </div>
+
+                            <div className="bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-sm space-y-12 relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full -mr-32 -mt-32 blur-3xl opacity-50" />
+
+                                <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+                                    <div className="relative group">
+                                        <div className="w-40 h-40 bg-slate-50 rounded-[3rem] overflow-hidden border-4 border-white shadow-2xl flex items-center justify-center p-1">
+                                            {data.user.image ? (
+                                                <img src={data.user.image} alt="" className="w-full h-full object-cover rounded-[2.5rem]" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center font-black text-slate-300 text-4xl bg-white rounded-[2.5rem]">
+                                                    {data.user.name?.[0]}
+                                                </div>
+                                            )}
+                                        </div>
+                                        <button className="absolute -bottom-2 -right-2 w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/40 hover:scale-110 active:scale-95 transition-all">
+                                            <Settings className="w-5 h-5" />
+                                        </button>
                                     </div>
-                                    <div className="space-y-2">
-                                        <p className="text-2xl font-black text-slate-800">{data.user.name}</p>
-                                        <p className="text-slate-400 font-bold flex items-center gap-2"><Mail className="w-4 h-4" /> {data.user.email}</p>
-                                        <span className="inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-black uppercase tracking-widest">{data.user.role}</span>
+                                    <div className="text-center md:text-left space-y-3">
+                                        <p className="text-3xl font-black text-slate-900 tracking-tighter">{data.user.name}</p>
+                                        <p className="text-slate-500 font-bold flex items-center justify-center md:justify-start gap-2 max-md:text-sm">
+                                            <Mail className="w-4 h-4 text-blue-500" /> {data.user.email}
+                                        </p>
+                                        <div className="flex items-center justify-center md:justify-start gap-2">
+                                            <span className="px-4 py-1.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20">{data.user.role}</span>
+                                            {data.user.isPremium && <span className="px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20">PREMIUM</span>}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-slate-50">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ad Soyad</label>
-                                        <input type="text" defaultValue={data.user.name} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 outline-none font-bold" />
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-12 border-t border-slate-50">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Ad Soyad</label>
+                                        <input type="text" defaultValue={data.user.name} className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 outline-none font-bold text-slate-700 focus:border-blue-500 focus:bg-white transition-all shadow-inner" />
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">E-posta</label>
-                                        <input type="email" disabled defaultValue={data.user.email} className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-slate-400 font-bold" />
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">E-posta Adresi</label>
+                                        <input type="email" disabled defaultValue={data.user.email} className="w-full bg-slate-100/50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 text-slate-400 font-bold cursor-not-allowed" />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Telefon</label>
+                                        <input type="text" placeholder="+90 (___) ___ __ __" className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 outline-none font-bold text-slate-700 focus:border-blue-500 focus:bg-white transition-all shadow-inner" />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Şirket Adı</label>
+                                        <input type="text" placeholder="Gümrük Müşavirliği Ltd. Şti." className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 outline-none font-bold text-slate-700 focus:border-blue-500 focus:bg-white transition-all shadow-inner" />
                                     </div>
                                 </div>
-                                <button className="px-12 py-5 bg-slate-900 hover:bg-black text-white rounded-[2rem] font-black transition-all">DEĞİŞİKLİKLERİ KAYDET</button>
+
+                                <div className="flex justify-end pt-4">
+                                    <button className="px-14 py-6 bg-slate-900 hover:bg-black text-white rounded-[2rem] font-black transition-all shadow-xl shadow-slate-900/10 active:scale-95 text-sm uppercase tracking-widest">
+                                        Değişiklikleri Uygula
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -313,8 +379,13 @@ export default function UserDashboard() {
 
 function SidebarLink({ icon, label, active, onClick }: any) {
     return (
-        <button onClick={onClick} className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black text-sm tracking-tight transition-all ${active ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20 translate-x-1' : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600'
-            }`}>
+        <button
+            onClick={onClick}
+            className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black text-sm tracking-tight transition-all ${active
+                ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20 translate-x-1'
+                : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
+                }`}
+        >
             {icon}
             {label}
         </button>
@@ -323,13 +394,13 @@ function SidebarLink({ icon, label, active, onClick }: any) {
 
 function SimpleStat({ label, value, icon }: any) {
     return (
-        <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-6">
-            <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center shrink-0">
+        <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm flex items-center gap-8 group hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
+            <div className="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center shrink-0 shadow-inner group-hover:bg-blue-50 group-hover:scale-110 transition-all duration-500">
                 {icon}
             </div>
             <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-                <p className="text-xl font-black text-slate-800">{value}</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 leading-none">{label}</p>
+                <p className="text-3xl font-black text-slate-900 tracking-tight leading-none">{value}</p>
             </div>
         </div>
     );
@@ -338,33 +409,36 @@ function SimpleStat({ label, value, icon }: any) {
 function HistoryRow({ declaration, detailed }: any) {
     const isCompleted = declaration.status === 'COMPLETED';
     return (
-        <div className="p-6 flex items-center justify-between group hover:bg-slate-50/50 transition-all">
-            <div className="flex items-center gap-6 min-w-0">
-                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center shrink-0 border border-slate-100">
-                    <FileText className="w-6 h-6 text-slate-400" />
+        <div className="p-8 flex items-center justify-between group hover:bg-slate-50/50 transition-all">
+            <div className="flex items-center gap-8 min-w-0">
+                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shrink-0 border border-slate-100 shadow-sm group-hover:border-blue-200 group-hover:bg-blue-50/50 transition-all">
+                    <FileText className="w-7 h-7 text-slate-400 group-hover:text-blue-500" />
                 </div>
                 <div className="min-w-0">
-                    <p className="text-sm font-black text-slate-800 truncate mb-1">
-                        {declaration.type || 'Bilinmeyen Belge'}
-                        <span className="text-[10px] text-slate-300 font-bold ml-3">#{declaration.id.slice(-6)}</span>
+                    <p className="text-lg font-black text-slate-800 truncate mb-1.5 tracking-tight group-hover:text-blue-600 transition-colors">
+                        {declaration.fileName?.split(',')[0] || 'İsimsiz Analiz'}
+                        <span className="text-xs text-slate-300 font-bold ml-4 opacity-50 font-mono">#{declaration.id.slice(-6).toUpperCase()}</span>
                     </p>
-                    <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                        <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {new Date(declaration.createdAt).toLocaleDateString()}</span>
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md ${isCompleted ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
-                            {isCompleted ? <CheckCircle2 className="w-3 h-3" /> : <RefreshCw className="w-3 h-3 animate-spin" />}
+                    <div className="flex items-center gap-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <span className="flex items-center gap-2 bg-slate-100 px-3 py-1 rounded-lg">
+                            <Clock className="w-3.5 h-3.5" />
+                            {new Date(declaration.createdAt).toLocaleDateString()}
+                        </span>
+                        <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg ${isCompleted ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
+                            {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5" /> : <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
                             {declaration.status === 'COMPLETED' ? 'TAMAMLANDI' : 'İŞLENİYOR'}
                         </span>
                     </div>
                 </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
                 {isCompleted && (
-                    <button title="Çıktı Al" className="p-3 bg-white border border-slate-100 text-slate-400 hover:text-blue-600 hover:border-blue-200 rounded-xl transition-all shadow-sm">
+                    <button title="Çıktı Al" className="w-12 h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-400 hover:text-blue-600 hover:border-blue-200 rounded-2xl transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
                         <Download className="w-5 h-5" />
                     </button>
                 )}
-                <button className="p-3 text-slate-300 hover:text-slate-600 transition-all">
-                    <MoreHorizontal className="w-5 h-5" />
+                <button className="w-12 h-12 flex items-center justify-center text-slate-200 hover:text-slate-600 transition-all">
+                    <MoreHorizontal className="w-6 h-6" />
                 </button>
             </div>
         </div>
@@ -374,22 +448,30 @@ function HistoryRow({ declaration, detailed }: any) {
 function PaymentCard({ payment }: any) {
     const isFailed = payment.status !== 'COMPLETED';
     return (
-        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-4 right-4 h-2 w-2 rounded-full animate-pulse bg-green-500" />
-            <div className="flex items-center justify-between mb-8">
-                <div className="p-4 bg-slate-50 rounded-2xl">
-                    <CreditCard className="w-6 h-6 text-slate-400" />
+        <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
+            <div className={`absolute top-0 right-0 w-2 h-full ${isFailed ? 'bg-red-500' : 'bg-emerald-500'} opacity-50`} />
+            <div className="flex items-center justify-between mb-10">
+                <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center shadow-inner group-hover:bg-blue-50 transition-all duration-500">
+                    <CreditCard className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-all" />
                 </div>
-                <p className="text-2xl font-black text-slate-800">{payment.amount} ₺</p>
+                <div className="text-right">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">TUTAR</p>
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter leading-none">{payment.amount} ₺</p>
+                </div>
             </div>
-            <div className="space-y-1 mb-8">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">İŞLEM NUMARASI</p>
-                <p className="text-xs font-bold text-slate-800 font-mono">{payment.id}</p>
+            <div className="space-y-4 mb-10 relative z-10">
+                <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 opacity-50">İŞLEM NO</p>
+                    <p className="text-xs font-bold text-slate-600 font-mono tracking-tighter truncate bg-slate-50 p-3 rounded-xl border border-dashed border-slate-200">{payment.id}</p>
+                </div>
             </div>
-            <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                <span className="text-[10px] font-bold text-slate-400">{new Date(payment.createdAt).toLocaleDateString()}</span>
-                <span className={`text-[10px] font-black px-2 py-1 rounded-lg ${isFailed ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-600'}`}>
-                    {payment.status}
+            <div className="pt-8 border-t border-slate-50 flex items-center justify-between">
+                <span className="text-[10px] font-black text-slate-400 flex items-center gap-2 group-hover:text-slate-600 transition-colors">
+                    <Clock className="w-3.5 h-3.5" />
+                    {new Date(payment.createdAt).toLocaleDateString()}
+                </span>
+                <span className={`text-[10px] font-black px-4 py-1.5 rounded-xl shadow-sm ${isFailed ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'}`}>
+                    {payment.status === 'COMPLETED' ? 'BAŞARILI' : 'BAŞARISIZ'}
                 </span>
             </div>
         </div>
@@ -398,12 +480,16 @@ function PaymentCard({ payment }: any) {
 
 function QuickLink({ icon, label }: any) {
     return (
-        <button className="w-full flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-all group border border-transparent hover:border-slate-100">
-            <div className="flex items-center gap-4">
-                {icon}
-                <span className="text-sm font-bold text-slate-600">{label}</span>
+        <button className="w-full flex items-center justify-between p-6 hover:bg-blue-50/50 rounded-[2rem] transition-all group border-2 border-transparent hover:border-blue-100/50">
+            <div className="flex items-center gap-6">
+                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:shadow-lg transition-all">
+                    {icon}
+                </div>
+                <span className="text-sm font-black text-slate-700 group-hover:text-blue-600 transition-all uppercase tracking-tight">{label}</span>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-all" />
+            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 group-hover:bg-blue-600 group-hover:text-white transition-all transform group-hover:translate-x-1">
+                <ChevronRight className="w-5 h-5" />
+            </div>
         </button>
     );
 }
