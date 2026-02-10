@@ -18,8 +18,10 @@ export default function BeyannameForm({ data }: BeyannameFormProps) {
 
     // Helper to format currency
     const formatCurrency = (val: any, currency = '') => {
-        if (!val) return '';
-        return `${Number(val).toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ${currency}`;
+        if (val === null || val === undefined || val === '') return '';
+        const num = Number(val);
+        if (isNaN(num)) return '';
+        return `${num.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} ${currency}`;
     };
 
     // Helper to render box header
@@ -134,7 +136,7 @@ export default function BeyannameForm({ data }: BeyannameFormProps) {
                                     {firstItem.doviz_cinsi || 'USD'}
                                 </div>
                                 <div className="font-bold text-lg mt-1">
-                                    {formatCurrency(getSafe(['toplamlar', 'toplam_fatura_tutari'])?.replace(/[^\d.-]/g, ''))}
+                                    {formatCurrency(String(getSafe(['toplamlar', 'toplam_fatura_tutari']) || '0').replace(/[^\d.-]/g, ''))}
                                 </div>
                             </div>
                             <div className="p-2">
