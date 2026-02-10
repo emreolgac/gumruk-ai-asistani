@@ -120,103 +120,113 @@ export default function NewDeclarationPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex overflow-hidden">
+        <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex overflow-hidden font-sans">
             {/* Sidebar */}
-            <aside className="w-80 bg-white border-r border-slate-100 flex flex-col shrink-0 hidden lg:flex">
-                <div className="p-8 border-b border-slate-50">
-                    <Link href="/tr" className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <aside className="w-80 bg-[#0f172a] flex flex-col shrink-0 hidden lg:flex border-r border-slate-800">
+                <div className="p-8 border-b border-white/5">
+                    <Link href="/tr" className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40 transform hover:rotate-6 transition-transform">
                             <FileSearch className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-xl font-black tracking-tighter text-slate-800">GÜMRÜK.AI</span>
+                        <div className="flex flex-col">
+                            <span className="text-xl font-black tracking-tighter text-white leading-none">GÜMRÜK.AI</span>
+                            <span className="text-[10px] font-bold text-blue-400/60 uppercase tracking-widest mt-1">Smart Logistics</span>
+                        </div>
                     </Link>
                 </div>
 
-                <div className="p-6 flex-1 space-y-2">
-                    <SidebarLink icon={<FileSearch className="w-5 h-5" />} label="Genel Bakış" onClick={() => router.push('/tr/dashboard')} />
+                <div className="p-6 flex-1 space-y-3">
+                    <SidebarLink icon={<FileSearch className="w-5 h-5" />} label="Genel Bakış" onClick={() => router.push('/tr/dashboard')} active />
                     <SidebarLink icon={<History className="w-5 h-5" />} label="İşlem Geçmişi" onClick={() => router.push('/tr/dashboard')} />
                     <SidebarLink icon={<CreditCard className="w-5 h-5" />} label="Ödemelerim" onClick={() => router.push('/tr/dashboard')} />
                     <SidebarLink icon={<Settings className="w-5 h-5" />} label="Profil Ayarları" onClick={() => router.push('/tr/dashboard')} />
                 </div>
 
-                <div className="p-6 border-t border-slate-50">
-                    <button onClick={handleLogout} className="w-full flex items-center gap-4 px-4 py-4 text-slate-400 hover:bg-red-50 hover:text-red-500 rounded-2xl font-bold transition-all">
-                        <LogOut className="w-5 h-5" />
+                <div className="p-6 border-t border-white/5">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-red-500/10 hover:text-red-400 rounded-2xl font-black transition-all group">
+                        <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                         Oturumu Kapat
                     </button>
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto h-screen custom-scrollbar">
+            <main className="flex-1 overflow-y-auto h-screen custom-scrollbar bg-[#f8fafc]">
                 {/* Top Header */}
-                <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-8 py-4 flex items-center justify-between">
-                    <button onClick={() => router.back()} className="flex items-center gap-2 text-slate-400 hover:text-slate-800 transition-colors font-bold text-sm">
+                <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between shadow-sm">
+                    <button onClick={() => router.back()} className="flex items-center gap-3 text-slate-400 hover:text-slate-900 transition-all font-black text-xs uppercase tracking-widest">
                         <ArrowLeft className="w-5 h-5" />
                         Geri Dön
                     </button>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-8">
                         <div className="flex flex-col items-end hidden md:flex">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kredi Bakiyesi</span>
-                            <span className="text-sm font-black text-blue-600 flex items-center gap-2">
-                                <Zap className="w-4 h-4 fill-blue-600" />
-                                {data.user.credits} KREDİ
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kullanılabilir Bakiye</span>
+                            <span className="text-lg font-black text-slate-900 flex items-center gap-2">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                                {data.user.credits} <span className="text-blue-600">KREDİ</span>
                             </span>
+                        </div>
+                        <div className="w-10 h-10 bg-slate-100 border border-slate-200 rounded-full flex items-center justify-center font-bold text-slate-600">
+                            {data.user.name?.charAt(0)}
                         </div>
                     </div>
                 </header>
 
-                <div className="p-8 lg:p-12 max-w-6xl mx-auto space-y-8">
-
+                <div className="p-8 lg:p-12 max-w-7xl mx-auto">
                     {!analysisResult ? (
                         <>
-                            <div className="text-center space-y-4 max-w-2xl mx-auto mb-12">
-                                <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-                                    Yeni Beyanname Analizi
+                            <div className="mb-12">
+                                <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-4">
+                                    Yeni Analiz <span className="text-blue-600">Başlat</span>
                                 </h1>
-                                <p className="text-lg text-slate-500 font-medium">
-                                    Belgelerinizi yükleyin, açıklamalarınızı ekleyin ve yapay zeka destekli Gümrük Müşaviriniz analiz etsin.
+                                <p className="text-lg text-slate-500 font-medium max-w-2xl">
+                                    Dokümanlarınızı yükleyin ve yapay zeka destekli analiz motorumuzun saniyeler içinde GTİP ve beyanname taslağını oluşturmasını izleyin.
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                                {/* Left Column: Upload & Input */}
-                                <div className="lg:col-span-8 space-y-6">
-                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
-                                        <div className="absolute top-8 left-8 bg-orange-50 text-orange-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 0: İşlem Türü</div>
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                                {/* Left Column: Steps */}
+                                <div className="lg:col-span-8 space-y-10">
+                                    {/* Step 0 */}
+                                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100 relative group transition-all hover:shadow-xl hover:shadow-slate-200/50">
+                                        <div className="absolute top-10 left-10 bg-blue-600 text-white font-black text-[10px] px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                                            Adım 0: İşlem Türü
+                                        </div>
 
-                                        <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-6">
                                             <RegimeButton
                                                 active={regime === 'ithalat'}
                                                 onClick={() => setRegime('ithalat')}
-                                                icon={<div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">📥</div>}
+                                                icon={<div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">📥</div>}
                                                 label="İthalat"
                                                 description="Giriş İşlemleri"
                                             />
                                             <RegimeButton
                                                 active={regime === 'ihracat'}
                                                 onClick={() => setRegime('ihracat')}
-                                                icon={<div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600">📤</div>}
+                                                icon={<div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-2xl">📤</div>}
                                                 label="İhracat"
                                                 description="Çıkış İşlemleri"
                                             />
                                             <RegimeButton
                                                 active={regime === 'transit'}
                                                 onClick={() => setRegime('transit')}
-                                                icon={<div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">🚛</div>}
+                                                icon={<div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-2xl">🚛</div>}
                                                 label="Transit"
                                                 description="Aktarma İşlemleri"
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                                    {/* Step 1 */}
+                                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100 relative group transition-all hover:shadow-xl hover:shadow-slate-200/50">
+                                        <div className="absolute top-10 left-10 bg-indigo-600 text-white font-black text-[10px] px-4 py-1.5 rounded-full uppercase tracking-widest">
+                                            Adım 1: Belge Kontrolü
+                                        </div>
 
-                                        {/* Step 1 Badge */}
-                                        <div className="absolute top-8 left-8 bg-blue-50 text-blue-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 1: Belge Yükle</div>
-
-                                        <div className="mt-8">
+                                        <div className="mt-16">
                                             <UploadZone
                                                 files={files}
                                                 onFilesChange={setFiles}
@@ -224,103 +234,100 @@ export default function NewDeclarationPage() {
                                         </div>
                                     </div>
 
-                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
-                                        {/* Step 2 Badge */}
-                                        <div className="absolute top-8 left-8 bg-purple-50 text-purple-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 2: Müşteri Talimatları</div>
+                                    {/* Step 2 */}
+                                    <div className="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100 relative group transition-all hover:shadow-xl hover:shadow-slate-200/50">
+                                        <div className="absolute top-10 left-10 bg-purple-600 text-white font-black text-[10px] px-4 py-1.5 rounded-full uppercase tracking-widest">
+                                            Adım 2: Teknik Talimatlar
+                                        </div>
 
-                                        <div className="mt-10 space-y-4">
-                                            <label className="block text-slate-700 font-bold ml-2">
-                                                Ek Açıklamalar / GTİP Talimatları <span className="text-slate-400 font-normal">(Opsiyonel)</span>
+                                        <div className="mt-16 space-y-4">
+                                            <label className="block text-slate-800 font-black text-sm ml-2 uppercase tracking-wide">
+                                                Özel Notlar veya GTİP Tercihleri
                                             </label>
-                                            <div className="relative">
+                                            <div className="relative group">
                                                 <textarea
                                                     value={userInstructions}
                                                     onChange={(e) => setUserInstructions(e.target.value)}
-                                                    placeholder="Örn: 'Bu ürün için 8481.80.99.00.00 GTİP kodunu kullanın.' veya 'Özel matrah uygulansın.'"
-                                                    className="w-full bg-slate-50 border border-slate-200 rounded-3xl p-6 h-40 resize-none focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium text-slate-700 placeholder:text-slate-400"
+                                                    placeholder="Örn: 'Bu ürün için 84. fasıl kuralları uygulansın' veya 'A.TR belgesi mevcuttur.'"
+                                                    className="w-full bg-slate-50 border-2 border-slate-200 rounded-[2rem] p-8 h-48 resize-none focus:outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 transition-all font-medium text-slate-700 placeholder:text-slate-400 text-lg shadow-inner"
                                                 />
-                                                <div className="absolute bottom-4 right-4 bg-white px-3 py-1 rounded-full border border-slate-100 text-xs font-bold text-slate-400 pointer-events-none">
-                                                    AI Talimatı
+                                                <div className="absolute bottom-6 right-8 bg-blue-600 text-white px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-500/20">
+                                                    AI Modu Aktif
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Right Column: Summary & Action */}
-                                <div className="lg:col-span-4 space-y-6">
-                                    <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-900/10 sticky top-32">
-                                        <h3 className="text-2xl font-black mb-6">Analiz Özeti</h3>
+                                {/* Right Column: Summary */}
+                                <div className="lg:col-span-4">
+                                    <div className="sticky top-32">
+                                        <div className="bg-gradient-to-br from-[#1e293b] to-[#0f172a] text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
+                                            {/* Decorative circles */}
+                                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl" />
+                                            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl transition-all duration-1000 group-hover:bg-indigo-600/20" />
 
-                                        <div className="space-y-6 mb-8">
-                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                                <span className="text-slate-400 font-medium">İşlem Türü</span>
-                                                <span className="font-bold uppercase text-blue-400">
-                                                    {regime}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                                <span className="text-slate-400 font-medium">Yüklenen Belge</span>
-                                                <span className="font-bold flex items-center gap-2">
-                                                    <FileText className="w-4 h-4 text-blue-400" />
-                                                    {files.length} Adet
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                                <span className="text-slate-400 font-medium">Talimat</span>
-                                                <span className="font-bold">
-                                                    {userInstructions ? 'Eklendi' : '-'}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                                                <span className="text-slate-400 font-medium">Tahmini Süre</span>
-                                                <span className="font-bold flex items-center gap-2">
-                                                    <Zap className="w-4 h-4 text-yellow-400" />
-                                                    ~30 Saniye
-                                                </span>
+                                            <div className="relative z-10">
+                                                <h3 className="text-3xl font-black mb-8 tracking-tight">Analiz <span className="text-blue-400">Raporu</span></h3>
+
+                                                <div className="space-y-6 mb-10">
+                                                    <SummaryItem label="İşlem Türü" value={regime} highlight />
+                                                    <SummaryItem label="Belge Sayısı" value={`${files.length} Dosya`} icon={<FileText className="w-4 h-4 text-blue-400" />} />
+                                                    <SummaryItem label="Özel Talimat" value={userInstructions ? 'Aktif' : 'Yok'} />
+                                                    <SummaryItem label="İşlem Hızı" value="Ultra / ~30sn" icon={<Zap className="w-4 h-4 text-yellow-400 animate-pulse" />} />
+                                                </div>
+
+                                                <button
+                                                    onClick={handleAnalyze}
+                                                    disabled={files.length === 0 || isAnalyzing}
+                                                    className="w-full py-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-600 rounded-[2rem] font-black text-lg transition-all flex items-center justify-center gap-4 shadow-xl shadow-blue-500/20 active:scale-95 group"
+                                                >
+                                                    {isAnalyzing ? (
+                                                        <>
+                                                            <div className="w-6 h-6 border-4 border-white/20 border-t-white rounded-full animate-spin" />
+                                                            İŞLENİYOR...
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Sparkles className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                                                            ANALİZİ BAŞLAT
+                                                        </>
+                                                    )}
+                                                </button>
+
+                                                {error && (
+                                                    <div className="mt-8 p-5 bg-red-500/10 border border-red-500/20 rounded-3xl text-red-400 text-sm font-bold flex items-start gap-4">
+                                                        <AlertCircle className="w-6 h-6 shrink-0" />
+                                                        <div>
+                                                            <p className="uppercase text-[10px] tracking-widest mb-1 opacity-50">Sistem Hatası</p>
+                                                            <p className="leading-tight">{error}</p>
+                                                            {errorHint && <p className="text-xs mt-2 text-white/40 font-normal leading-relaxed">{errorHint}</p>}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
-                                        <button
-                                            onClick={handleAnalyze}
-                                            disabled={files.length === 0 || isAnalyzing}
-                                            className="w-full py-5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 relative overflow-hidden group"
-                                        >
-                                            {isAnalyzing ? (
-                                                <>
-                                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                    ANALİZ EDİLİYOR...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                                    ANALİZİ BAŞLAT
-                                                </>
-                                            )}
-                                        </button>
-
-                                        {error && (
-                                            <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-sm font-bold flex items-start gap-3">
-                                                <AlertCircle className="w-5 h-5 shrink-0" />
-                                                <div>
-                                                    <p>{error}</p>
-                                                    {errorHint && <p className="text-xs mt-1 opacity-70 font-normal">{errorHint}</p>}
-                                                </div>
-                                            </div>
-                                        )}
+                                        <div className="mt-8 p-8 bg-blue-50 rounded-[2.5rem] border border-blue-100/50 text-blue-900/60 text-xs font-bold leading-relaxed flex items-center gap-4">
+                                            <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-xl shadow-sm">💡</div>
+                                            <p>Analiz başlatılmadan önce belgelerin net bir şekilde okunaklı olduğundan emin olun.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </>
                     ) : (
-                        <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
-                            <div className="flex items-center justify-between mb-8">
+                        <div className="animate-in fade-in slide-in-from-bottom-10 duration-1000">
+                            <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-6">
                                 <div>
-                                    <h2 className="text-3xl font-black text-slate-800">Analiz Sonucu</h2>
-                                    <p className="text-slate-500 font-medium">Yapay zeka tarafından oluşturulan beyanname taslağı.</p>
+                                    <h2 className="text-4xl font-black text-slate-800 tracking-tight">Rapor <span className="text-blue-600">Hazır!</span></h2>
+                                    <p className="text-slate-500 font-medium text-lg">Yapay zeka gümrük beyanname taslağını başarıyla oluşturdu.</p>
                                 </div>
-                                <button onClick={() => setAnalysisResult(null)} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all text-sm">
-                                    Yeni Analiz
+                                <button
+                                    onClick={() => setAnalysisResult(null)}
+                                    className="px-10 py-5 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-[2rem] font-black transition-all text-sm uppercase tracking-widest hover:scale-105 active:scale-95 shadow-lg shadow-slate-200"
+                                >
+                                    Yeni Analiz Başlat
                                 </button>
                             </div>
 
@@ -334,27 +341,53 @@ export default function NewDeclarationPage() {
     );
 }
 
+function SummaryItem({ label, value, icon, highlight = false }: any) {
+    return (
+        <div className="flex items-center justify-between border-b border-white/5 pb-5">
+            <span className="text-slate-500 font-black text-[10px] uppercase tracking-widest">{label}</span>
+            <span className={`font-black flex items-center gap-2 ${highlight ? 'text-blue-400' : 'text-slate-100'}`}>
+                {icon}
+                {value}
+            </span>
+        </div>
+    );
+}
+
 function RegimeButton({ active, onClick, icon, label, description }: any) {
     return (
         <button
             onClick={onClick}
-            className={`p-6 rounded-[2rem] border-2 transition-all text-left space-y-3 ${active
-                ? 'border-blue-600 bg-blue-50 shadow-md'
-                : 'border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200'
+            className={`p-8 rounded-[2.5rem] border-2 transition-all text-left space-y-4 relative overflow-hidden group ${active
+                ? 'border-blue-500 bg-blue-50/50 shadow-xl shadow-blue-500/10'
+                : 'border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200 hover:shadow-lg'
                 }`}
         >
+            {active && (
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full -mr-12 -mt-12" />
+            )}
             {icon}
             <div>
-                <p className={`font-black tracking-tight ${active ? 'text-blue-700' : 'text-slate-700'}`}>{label}</p>
+                <p className={`text-xl font-black tracking-tighter ${active ? 'text-blue-700' : 'text-slate-800'}`}>{label}</p>
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{description}</p>
             </div>
+            {active && (
+                <div className="absolute bottom-6 right-8">
+                    <CheckCircle2 className="w-6 h-6 text-blue-600" />
+                </div>
+            )}
         </button>
     );
 }
 
-function SidebarLink({ icon, label, onClick }: any) {
+function SidebarLink({ icon, label, onClick, active = false }: any) {
     return (
-        <button onClick={onClick} className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black text-sm tracking-tight transition-all text-slate-400 hover:bg-slate-50 hover:text-slate-600">
+        <button
+            onClick={onClick}
+            className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black text-sm tracking-tight transition-all ${active
+                ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20'
+                : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
+                }`}
+        >
             {icon}
             {label}
         </button>
