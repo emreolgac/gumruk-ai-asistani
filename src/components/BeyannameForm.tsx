@@ -44,7 +44,9 @@ export default function BeyannameForm({ data }: BeyannameFormProps) {
                     <div className="col-span-6 grid grid-cols-3 border-r border-green-800 border-b border-green-800">
                         <div className="p-2 border-r border-green-800">
                             <BoxHeader number="1" title="BEYAN" />
-                            <div className="text-xl font-bold text-center mt-2">IM</div>
+                            <div className="text-xl font-bold text-center mt-2">
+                                {data.belge_bilgileri?.beyanname_tipi || 'IM'}
+                            </div>
                         </div>
                         <div className="p-2 border-r border-green-800">
                             <div className="text-xl font-bold text-center mt-8">A</div>
@@ -192,7 +194,9 @@ export default function BeyannameForm({ data }: BeyannameFormProps) {
                             <div className="grid grid-cols-2 h-16 border-b border-green-800">
                                 <div className="p-2 border-r border-green-800">
                                     <BoxHeader number="37" title="REJİM" />
-                                    <div className="text-center font-bold">4000</div>
+                                    <div className="text-center font-bold">
+                                        {data.belge_bilgileri?.rejim_kodu || '4000'}
+                                    </div>
                                 </div>
                                 <div className="p-2">
                                     <BoxHeader number="38" title="NET KG" />

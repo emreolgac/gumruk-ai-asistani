@@ -33,6 +33,7 @@ export default function NewDeclarationPage() {
 
     // Analysis State
     const [files, setFiles] = useState<File[]>([]);
+    const [regime, setRegime] = useState<'ithalat' | 'ihracat' | 'transit'>('ithalat');
     const [userInstructions, setUserInstructions] = useState('');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisResult, setAnalysisResult] = useState<any>(null);
@@ -71,6 +72,7 @@ export default function NewDeclarationPage() {
 
         const formData = new FormData();
         files.forEach((file) => formData.append('files', file));
+        formData.append('regime', regime);
         if (userInstructions.trim()) {
             formData.append('userInstructions', userInstructions);
         }
@@ -182,6 +184,34 @@ export default function NewDeclarationPage() {
                                 {/* Left Column: Upload & Input */}
                                 <div className="lg:col-span-8 space-y-6">
                                     <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                                        <div className="absolute top-8 left-8 bg-orange-50 text-orange-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 0: İşlem Türü</div>
+
+                                        <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                            <RegimeButton
+                                                active={regime === 'ithalat'}
+                                                onClick={() => setRegime('ithalat')}
+                                                icon={<div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">📥</div>}
+                                                label="İthalat"
+                                                description="Giriş İşlemleri"
+                                            />
+                                            <RegimeButton
+                                                active={regime === 'ihracat'}
+                                                onClick={() => setRegime('ihracat')}
+                                                icon={<div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600">📤</div>}
+                                                label="İhracat"
+                                                description="Çıkış İşlemleri"
+                                            />
+                                            <RegimeButton
+                                                active={regime === 'transit'}
+                                                onClick={() => setRegime('transit')}
+                                                icon={<div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">🚛</div>}
+                                                label="Transit"
+                                                description="Aktarma İşlemleri"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
 
                                         {/* Step 1 Badge */}
                                         <div className="absolute top-8 left-8 bg-blue-50 text-blue-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 1: Belge Yükle</div>
@@ -223,6 +253,12 @@ export default function NewDeclarationPage() {
                                         <h3 className="text-2xl font-black mb-6">Analiz Özeti</h3>
 
                                         <div className="space-y-6 mb-8">
+                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                                <span className="text-slate-400 font-medium">İşlem Türü</span>
+                                                <span className="font-bold uppercase text-blue-400">
+                                                    {regime}
+                                                </span>
+                                            </div>
                                             <div className="flex items-center justify-between border-b border-white/10 pb-4">
                                                 <span className="text-slate-400 font-medium">Yüklenen Belge</span>
                                                 <span className="font-bold flex items-center gap-2">
@@ -295,6 +331,24 @@ export default function NewDeclarationPage() {
                 </div>
             </main>
         </div>
+    );
+}
+
+function RegimeButton({ active, onClick, icon, label, description }: any) {
+    return (
+        <button
+            onClick={onClick}
+            className={`p-6 rounded-[2rem] border-2 transition-all text-left space-y-3 ${active
+                ? 'border-blue-600 bg-blue-50 shadow-md'
+                : 'border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200'
+                }`}
+        >
+            {icon}
+            <div>
+                <p className={`font-black tracking-tight ${active ? 'text-blue-700' : 'text-slate-700'}`}>{label}</p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{description}</p>
+            </div>
+        </button>
     );
 }
 

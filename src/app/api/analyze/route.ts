@@ -78,10 +78,37 @@ export async function POST(request: NextRequest) {
         );
 
         const userInstructions = formData.get('userInstructions') as string || '';
+        const regime = formData.get('regime') as string || 'ithalat';
+
+        let regimeInstructions = '';
+        if (regime === 'ihracat') {
+            regimeInstructions = `
+            - BU BİR İHRACAT (EXPORT) İŞLEMİDİR. 
+            - Beyanname tipi: EX
+            - KDV istisnası, A.TR, EUR.1 gibi ihracat belgelerini kontrol et.
+            - Rejim kodu genellikle 1000'dir.
+            `;
+        } else if (regime === 'transit') {
+            regimeInstructions = `
+            - BU BİR TRANSİT (TRANSFER) İŞLEMİDİR.
+            - Beyanname tipi: TR
+            - Varış gümrüğü ve transit sürelerini kontrol et.
+            - Rejim kodu genellikle 0100 veya T1/T2 senaryosuna göredir.
+            `;
+        } else {
+            regimeInstructions = `
+            - BU BİR İTHALAT (IMPORT) İŞLEMİDİR.
+            - Beyanname tipi: IM
+            - Gümrük vergileri, KDV ve ÖTV matrahlarını kontrol et.
+            - Rejim kodu genellikle 4000'dir.
+            `;
+        }
 
         const prompt = `
           DİKKAT: Sen T.C. Ticaret Bakanlığı'na bağlı kıdemli bir "Gümrük Muayene Memuru"sun.
           Görevin: Ekte sunulan ticari belgeleri (Fatura, Çeki Listesi, Konşimento vb.) en ince ayrıntısına kadar incelemek ve 4458 sayılı Gümrük Kanunu ile 2024-2025 Türk Gümrük Tarife Cetveli'ne göre kesin doğrulukta sınıflandırmak.
+
+          ${regimeInstructions}
 
           ${userInstructions ? `
           ----------------------------------------------------------------------------------
@@ -100,7 +127,7 @@ export async function POST(request: NextRequest) {
           ÇIKTI FORMATI (SAF JSON):
           - **gonderici_firma**: { adi, adresi (tam), ulkesi }
           - **alici_firma**: { adi, adresi (tam), vergi_no (varsa) }
-          - **belge_bilgileri**: { fatura_no, fatura_tarihi (dd/mm/yyyy), teslim_sekli }
+          - **belge_bilgileri**: { fatura_no, fatura_tarihi (dd/mm/yyyy), teslim_sekli, beyanname_tipi (IM/EX/TR), rejim_kodu }
           - **esya_listesi**: [ 
               { 
                 "tanimi": "Eşyanın ticari ve teknik Türkçe tanımı", 
