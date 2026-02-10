@@ -5,15 +5,15 @@ import {
     FileSearch,
     History,
     CreditCard,
-    User,
     Settings,
-    HelpCircle,
     LogOut,
-    Search,
     Zap,
     ArrowLeft,
-    Mail,
-    AlertCircle
+    AlertCircle,
+    Send,
+    FileText,
+    Sparkles,
+    CheckCircle2
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -29,7 +29,12 @@ interface DashboardData {
 export default function NewDeclarationPage() {
     const router = useRouter();
     const [data, setData] = useState<DashboardData | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loadingData, setLoadingData] = useState(true);
+
+    // Analysis State
+    const [files, setFiles] = useState<File[]>([]);
+    const [userInstructions, setUserInstructions] = useState('');
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [analysisResult, setAnalysisResult] = useState<any>(null);
 
     // Error states
@@ -50,13 +55,60 @@ export default function NewDeclarationPage() {
             } catch (err) {
                 console.error('Dash error:', err);
             } finally {
-                setLoading(false);
+                setLoadingData(false);
             }
         };
         fetchData();
     }, [router]);
 
-    if (loading || !data || !data.user) {
+    const handleAnalyze = async () => {
+        if (files.length === 0) return;
+
+        setIsAnalyzing(true);
+        setError(null);
+        setErrorDetails(null);
+        setErrorHint(null);
+
+        const formData = new FormData();
+        files.forEach((file) => formData.append('files', file));
+        if (userInstructions.trim()) {
+            formData.append('userInstructions', userInstructions);
+        }
+
+        try {
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const resData = await response.json();
+
+            if (!response.ok) {
+                setError(resData.error || 'Analiz hatası');
+                setErrorDetails(resData.details);
+                setErrorHint(resData.hint);
+                setIsAnalyzing(false);
+                return;
+            }
+
+            // Success simulation for UX
+            setTimeout(() => {
+                setAnalysisResult(resData.result);
+                setIsAnalyzing(false);
+                setFiles([]);
+                setUserInstructions('');
+            }, 1000);
+
+        } catch (err) {
+            console.error(err);
+            setError('Bağlantı hatası oluştu.');
+            setIsAnalyzing(false);
+        }
+    };
+
+    const handleLogout = () => signOut({ callbackUrl: '/tr' });
+
+    if (loadingData || !data || !data.user) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen bg-white">
                 <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin mb-4" />
@@ -64,8 +116,6 @@ export default function NewDeclarationPage() {
             </div>
         );
     }
-
-    const handleLogout = () => signOut({ callbackUrl: '/tr' });
 
     return (
         <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex overflow-hidden">
@@ -115,65 +165,133 @@ export default function NewDeclarationPage() {
                     </div>
                 </header>
 
-                <div className="p-8 lg:p-12 max-w-5xl mx-auto space-y-12">
-                    <div className="space-y-4">
-                        <h1 className="text-4xl font-black text-slate-800 tracking-tight">Yeni Beyanname Analizi</h1>
-                        <p className="text-slate-500 font-medium">Belgelerinizi yükleyerek yapay zeka destekli analizi başlatın.</p>
-                    </div>
+                <div className="p-8 lg:p-12 max-w-6xl mx-auto space-y-8">
 
-                    <div className="bg-white p-8 lg:p-12 rounded-[3.5rem] shadow-sm border border-slate-100">
-                        {error && (
-                            <div className="mb-8 space-y-4">
-                                <div className="p-6 bg-red-50 text-red-600 rounded-3xl border border-red-100 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-                                    <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 bg-red-100 rounded-2xl flex items-center justify-center shrink-0">
-                                            <AlertCircle className="w-6 h-6 text-red-600" />
-                                        </div>
-                                        <div className="space-y-1">
-                                            <p className="font-black text-lg leading-tight">{error}</p>
-                                            {errorDetails && <p className="text-sm font-medium opacity-80">{errorDetails}</p>}
+                    {!analysisResult ? (
+                        <>
+                            <div className="text-center space-y-4 max-w-2xl mx-auto mb-12">
+                                <h1 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
+                                    Yeni Beyanname Analizi
+                                </h1>
+                                <p className="text-lg text-slate-500 font-medium">
+                                    Belgelerinizi yükleyin, açıklamalarınızı ekleyin ve yapay zeka destekli Gümrük Müşaviriniz analiz etsin.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                                {/* Left Column: Upload & Input */}
+                                <div className="lg:col-span-8 space-y-6">
+                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+
+                                        {/* Step 1 Badge */}
+                                        <div className="absolute top-8 left-8 bg-blue-50 text-blue-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 1: Belge Yükle</div>
+
+                                        <div className="mt-8">
+                                            <UploadZone
+                                                files={files}
+                                                onFilesChange={setFiles}
+                                            />
                                         </div>
                                     </div>
-                                    {errorHint && (
-                                        <div className="mt-4 p-4 bg-white/50 rounded-2xl border border-red-200/50 text-[13px] font-bold text-red-800 flex items-center gap-3">
-                                            <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                                            {errorHint}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
 
-                        {!analysisResult ? (
-                            <UploadZone
-                                onAnalysisStart={() => {
-                                    setLoading(true);
-                                    setError(null);
-                                    setErrorDetails(null);
-                                    setErrorHint(null);
-                                }}
-                                onAnalysisComplete={(result) => {
-                                    setAnalysisResult(result);
-                                    setLoading(false);
-                                }}
-                                onError={(err, details, hint) => {
-                                    setError(err);
-                                    setErrorDetails(details || null);
-                                    setErrorHint(hint || null);
-                                    setLoading(false);
-                                }}
-                            />
-                        ) : (
-                            <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
-                                <DeclarationViewer data={analysisResult} />
-                                <div className="mt-8 text-center">
-                                    <button onClick={() => setAnalysisResult(null)} className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all">
-                                        Yeni Analiz Yap
-                                    </button>
+                                    <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+                                        {/* Step 2 Badge */}
+                                        <div className="absolute top-8 left-8 bg-purple-50 text-purple-700 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wide">Adım 2: Müşteri Talimatları</div>
+
+                                        <div className="mt-10 space-y-4">
+                                            <label className="block text-slate-700 font-bold ml-2">
+                                                Ek Açıklamalar / GTİP Talimatları <span className="text-slate-400 font-normal">(Opsiyonel)</span>
+                                            </label>
+                                            <div className="relative">
+                                                <textarea
+                                                    value={userInstructions}
+                                                    onChange={(e) => setUserInstructions(e.target.value)}
+                                                    placeholder="Örn: 'Bu ürün için 8481.80.99.00.00 GTİP kodunu kullanın.' veya 'Özel matrah uygulansın.'"
+                                                    className="w-full bg-slate-50 border border-slate-200 rounded-3xl p-6 h-40 resize-none focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium text-slate-700 placeholder:text-slate-400"
+                                                />
+                                                <div className="absolute bottom-4 right-4 bg-white px-3 py-1 rounded-full border border-slate-100 text-xs font-bold text-slate-400 pointer-events-none">
+                                                    AI Talimatı
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Column: Summary & Action */}
+                                <div className="lg:col-span-4 space-y-6">
+                                    <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-900/10 sticky top-32">
+                                        <h3 className="text-2xl font-black mb-6">Analiz Özeti</h3>
+
+                                        <div className="space-y-6 mb-8">
+                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                                <span className="text-slate-400 font-medium">Yüklenen Belge</span>
+                                                <span className="font-bold flex items-center gap-2">
+                                                    <FileText className="w-4 h-4 text-blue-400" />
+                                                    {files.length} Adet
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                                <span className="text-slate-400 font-medium">Talimat</span>
+                                                <span className="font-bold">
+                                                    {userInstructions ? 'Eklendi' : '-'}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                                <span className="text-slate-400 font-medium">Tahmini Süre</span>
+                                                <span className="font-bold flex items-center gap-2">
+                                                    <Zap className="w-4 h-4 text-yellow-400" />
+                                                    ~30 Saniye
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            onClick={handleAnalyze}
+                                            disabled={files.length === 0 || isAnalyzing}
+                                            className="w-full py-5 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-3 relative overflow-hidden group"
+                                        >
+                                            {isAnalyzing ? (
+                                                <>
+                                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                                    ANALİZ EDİLİYOR...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                                                    ANALİZİ BAŞLAT
+                                                </>
+                                            )}
+                                        </button>
+
+                                        {error && (
+                                            <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 text-sm font-bold flex items-start gap-3">
+                                                <AlertCircle className="w-5 h-5 shrink-0" />
+                                                <div>
+                                                    <p>{error}</p>
+                                                    {errorHint && <p className="text-xs mt-1 opacity-70 font-normal">{errorHint}</p>}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        )}
-                    </div>
+                        </>
+                    ) : (
+                        <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
+                            <div className="flex items-center justify-between mb-8">
+                                <div>
+                                    <h2 className="text-3xl font-black text-slate-800">Analiz Sonucu</h2>
+                                    <p className="text-slate-500 font-medium">Yapay zeka tarafından oluşturulan beyanname taslağı.</p>
+                                </div>
+                                <button onClick={() => setAnalysisResult(null)} className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all text-sm">
+                                    Yeni Analiz
+                                </button>
+                            </div>
+
+                            <DeclarationViewer data={analysisResult} />
+                        </div>
+                    )}
+
                 </div>
             </main>
         </div>

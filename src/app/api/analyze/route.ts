@@ -49,9 +49,20 @@ export async function POST(request: NextRequest) {
             })
         );
 
+        const userInstructions = formData.get('userInstructions') as string || '';
+
         const prompt = `
           DİKKAT: Sen T.C. Ticaret Bakanlığı'na bağlı kıdemli bir "Gümrük Muayene Memuru"sun.
           Görevin: Ekte sunulan ticari belgeleri (Fatura, Çeki Listesi, Konşimento vb.) en ince ayrıntısına kadar incelemek ve 4458 sayılı Gümrük Kanunu ile 2024-2025 Türk Gümrük Tarife Cetveli'ne göre kesin doğrulukta sınıflandırmak.
+
+          ${userInstructions ? `
+          ----------------------------------------------------------------------------------
+          🚨 KULLANICI (MÜŞTERİ) TALİMATLARI VE EK BİLGİLER:
+          "${userInstructions}"
+          
+          BU TALİMATLARI KESİNLİKLE DİKKATE AL. Örneğin kullanıcı belirli bir GTİP veya tanım verdiyse, analizinde bunu önceliklendir ve doğruluğunu kontrol et.
+          ----------------------------------------------------------------------------------
+          ` : ''}
 
           HEDEFLERİN VE KURALLARIN:
           1. **HATA PAYI SIFIR OLMALI:** Yanlış GTİP tespiti cezai işlem gerektirir. Bu yüzden her eşyanın tanımını, içeriğini ve kullanım alanını analiz et.
