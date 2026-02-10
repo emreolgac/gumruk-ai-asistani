@@ -12,7 +12,7 @@ interface DeclarationViewerProps {
 
 export default function DeclarationViewer({ data }: DeclarationViewerProps) {
     const [editableData, setEditableData] = useState(data);
-    const [viewMode, setViewMode] = useState<'list' | 'form'>('list');
+    const [viewMode, setViewMode] = useState<'list' | 'form'>('form');
 
     const handleDownload = (format: 'json' | 'xlsx' | 'pdf') => {
         if (format === 'json') {

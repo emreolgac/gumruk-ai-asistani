@@ -19,6 +19,7 @@ import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import UploadZone from '@/components/UploadZone';
+import DeclarationViewer from '@/components/DeclarationViewer';
 
 interface DashboardData {
     user: any;
@@ -163,19 +164,13 @@ export default function NewDeclarationPage() {
                                 }}
                             />
                         ) : (
-                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-5 duration-700">
-                                <div className="p-8 bg-green-50 rounded-[2.5rem] border border-green-100 text-green-800">
-                                    <h3 className="text-xl font-black mb-2">Analiz Tamamlandı!</h3>
-                                    <p className="font-medium">Beyannameniz başarıyla işlendi ve veriler ayrıştırıldı.</p>
+                            <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
+                                <DeclarationViewer data={analysisResult} />
+                                <div className="mt-8 text-center">
+                                    <button onClick={() => setAnalysisResult(null)} className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all">
+                                        Yeni Analiz Yap
+                                    </button>
                                 </div>
-                                <div className="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100">
-                                    <pre className="text-xs font-mono text-slate-600 overflow-auto max-h-96">
-                                        {JSON.stringify(analysisResult, null, 2)}
-                                    </pre>
-                                </div>
-                                <button onClick={() => setAnalysisResult(null)} className="px-10 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all">
-                                    Yeni Analiz Yap
-                                </button>
                             </div>
                         )}
                     </div>

@@ -50,38 +50,35 @@ export async function POST(request: NextRequest) {
         );
 
         const prompt = `
-          Sen uzman bir Gümrük Müşaviri ve Sınıflandırma Uzmanısın. 
-          Görevin: Ekteki ticari belgeleri (Fatura, Çeki Listesi, Ordino vb.) Türk Gümrük Mevzuatı (4458 sayılı Kanun) ve 2024-2025 Türk Gümrük Tarife Cetveli'ne göre analiz etmek.
+          DİKKAT: Sen T.C. Ticaret Bakanlığı'na bağlı kıdemli bir "Gümrük Muayene Memuru"sun.
+          Görevin: Ekte sunulan ticari belgeleri (Fatura, Çeki Listesi, Konşimento vb.) en ince ayrıntısına kadar incelemek ve 4458 sayılı Gümrük Kanunu ile 2024-2025 Türk Gümrük Tarife Cetveli'ne göre kesin doğrulukta sınıflandırmak.
 
-          ÖNEMLİ: Özellikle "GTİP" (Gümrük Tarife İstatistik Pozisyonu) tespitinde maksimum hassasiyet göster.
-          - Ürün tanımlarını detaylı incele.
-          - Mümkünse 12 haneli tam GTİP kodu ver. Eğer emin değilsen 6 veya 8 haneli verip yanına "(Tahmini)" notu düş.
-          - Eğer belgede GTİP varsa onu kullan, yoksa en uygununu tespit et.
+          HEDEFLERİN VE KURALLARIN:
+          1. **HATA PAYI SIFIR OLMALI:** Yanlış GTİP tespiti cezai işlem gerektirir. Bu yüzden her eşyanın tanımını, içeriğini ve kullanım alanını analiz et.
+          2. **GTİP HASSASİYETİ:** Mümkün olan her durumda 12 haneli tam GTİP kodu ver. Sadece %100 emin değilsen yanına "(Tahmini)" yaz, ancak en uygun kodu TESPİT ETMEK ZORUNDASIN.
+          3. **VERİ ÇIKARIMI:** Gönderici, Alıcı, Fatura No, Tarih, Teslim Şekli ve Döviz Cinsi gibi kritik verileri eksiksiz çek.
+          
+          ÇIKTI FORMATI (SAF JSON):
+          - **gonderici_firma**: { adi, adresi (tam), ulkesi }
+          - **alici_firma**: { adi, adresi (tam), vergi_no (varsa) }
+          - **belge_bilgileri**: { fatura_no, fatura_tarihi (dd/mm/yyyy), teslim_sekli }
+          - **esya_listesi**: [ 
+              { 
+                "tanimi": "Eşyanın ticari ve teknik Türkçe tanımı", 
+                "gtip": "1234.56.78.90.00", 
+                "brut_agirlik": 0.0, 
+                "net_agirlik": 0.0, 
+                "adet": 0, 
+                "birim_fiyat": 0.0, 
+                "toplam_fiyat": 0.0, 
+                "doviz_cinsi": "USD" 
+              } 
+            ]
+          - **toplamlar**: { toplam_brut_agirlik, toplam_net_agirlik, toplam_fatura_tutari }
+          - **ozet**: "İncelenen belgeler kapsamında... tespit edilmiştir." şeklinde memur üslubuyla kısa özet.
 
-          Aşağıdaki bilgileri SAF JSON formatında çıkar:
-          1. **gonderici_firma**: Adı, tam adresi ve ülkesi.
-          2. **alici_firma**: Adı, tam adresi ve vergi numarası (VKN).
-          3. **belge_bilgileri**: 
-             - fatura_no: Belge/Fatura numarası.
-             - fatura_tarihi: Gün/Ay/Yıl formatında.
-             - teslim_sekli: Incoterms (EXW, CIF, FOB, DAP vb.).
-          4. **esya_listesi**: Her bir kalem için: 
-             - tanimi: Eşyanın ticari ve teknik tanımı (Türkçe).
-             - gtip: 12 haneli Gümrük Tarife Kodu.
-             - brut_agirlik: Kg cinsinden (sayısal).
-             - net_agirlik: Kg cinsinden (sayısal).
-             - adet: Kap adedi veya miktar.
-             - birim_fiyat: Sayısal değer.
-             - toplam_fiyat: Sayısal değer.
-             - doviz_cinsi: (USD, EUR, TRY vb.).
-          5. **toplamlar**: 
-             - toplam_brut_agirlik
-             - toplam_net_agirlik
-             - toplam_fatura_tutari: (Döviz cinsiyle beraber, örn: "10500.00 EUR").
-          6. **ozet**: Belgelerin içeriğine ve gümrük rejimine dair profesyonel bir Türkçe özet (1-2 cümle).
-
-          Eğer belgede bilgi yoksa "Belirtilmemiş" yaz veya null bırak (sayısal alanlar için 0).
-          Sadece saf JSON çıktısı ver, markdown ('''json) kullanma.
+          Eğer bir bilgi belgede AÇIKÇA yoksa, tahminde bulunma ve "Belirtilmemiş" yaz veya sayısal değerse 0 ver.
+          Çıktı sadece ve sadece saf JSON olmalı. Markdown bloğu kullanma.
         `;
 
         // 3. Call Gemini API with Discovery & Fallback
