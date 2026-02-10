@@ -5,6 +5,9 @@ import { Save, Download, FileJson, FileSpreadsheet, FileCode, Printer, Table, Fi
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import BeyannameForm from './BeyannameForm';
+import EvrimOutput from './EvrimOutput';
+import MaviOutput from './MaviOutput';
+import { LayoutGrid, Box } from 'lucide-react';
 
 interface DeclarationViewerProps {
     data: any;
@@ -12,7 +15,7 @@ interface DeclarationViewerProps {
 
 export default function DeclarationViewer({ data }: DeclarationViewerProps) {
     const [editableData, setEditableData] = useState(data);
-    const [viewMode, setViewMode] = useState<'list' | 'form'>('form');
+    const [viewMode, setViewMode] = useState<'list' | 'form' | 'evrim' | 'mavi'>('form');
 
     const handleDownload = (format: 'json' | 'xlsx' | 'pdf') => {
         if (format === 'json') {
@@ -58,16 +61,28 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                     {/* View Toggler */}
                     <div className="flex bg-gray-100 p-1 rounded-lg">
                         <button
+                            onClick={() => setViewMode('form')}
+                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all ${viewMode === 'form' ? 'bg-green-100 text-green-700 shadow ring-1 ring-green-200' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            <FileText className="w-4 h-4" /> Resmi
+                        </button>
+                        <button
+                            onClick={() => setViewMode('evrim')}
+                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all ${viewMode === 'evrim' ? 'bg-[#0052cc] text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            <div className="w-4 h-4 bg-white/20 rounded flex items-center justify-center text-[10px] font-bold">E</div> Evrim
+                        </button>
+                        <button
+                            onClick={() => setViewMode('mavi')}
+                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all ${viewMode === 'mavi' ? 'bg-[#0070f3] text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            <Box className="w-4 h-4" /> Mavi
+                        </button>
+                        <button
                             onClick={() => setViewMode('list')}
                             className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all ${viewMode === 'list' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                             <Table className="w-4 h-4" /> Liste
-                        </button>
-                        <button
-                            onClick={() => setViewMode('form')}
-                            className={`px-4 py-2 rounded-md text-sm font-bold flex items-center gap-2 transition-all ${viewMode === 'form' ? 'bg-green-100 text-green-700 shadow ring-1 ring-green-200' : 'text-gray-500 hover:text-gray-700'}`}
-                        >
-                            <FileText className="w-4 h-4" /> Beyanname
                         </button>
                     </div>
 
@@ -82,7 +97,7 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                 </div>
             </div>
 
-            {viewMode === 'list' ? (
+            {viewMode === 'list' && (
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Gönderici / Alıcı */}
@@ -161,12 +176,25 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                         </div>
                     </div>
                 </div>
-            ) : (
+            )}
+
+            {viewMode === 'form' && (
                 <div className="animate-in fade-in zoom-in-95 duration-500">
                     <BeyannameForm data={editableData} />
                 </div>
             )}
 
+            {viewMode === 'evrim' && (
+                <div className="animate-in fade-in zoom-in-95 duration-500">
+                    <EvrimOutput data={editableData} />
+                </div>
+            )}
+
+            {viewMode === 'mavi' && (
+                <div className="animate-in fade-in zoom-in-95 duration-500">
+                    <MaviOutput data={editableData} />
+                </div>
+            )}
         </div>
     );
 }
