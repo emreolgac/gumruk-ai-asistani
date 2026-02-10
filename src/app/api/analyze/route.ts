@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { getConfig } from '@/lib/config';
 import { logSystem } from '@/lib/logger';
 import { trackHit } from '@/lib/analytics';
+import * as XLSX from 'xlsx';
 
 // Gemini pricing (per 1M tokens) - approximate for gemini-1.5-flash
 const PRICING = {
@@ -35,11 +36,38 @@ export async function POST(request: NextRequest) {
         }
 
 
-        // 2. Prepare files for Gemini
+        // 2. Prepare files for Gemini (Handle Excel parsing)
         const fileParts = await Promise.all(
             files.map(async (file) => {
                 const arrayBuffer = await file.arrayBuffer();
                 const buffer = Buffer.from(arrayBuffer);
+
+                // Check for Excel MIME types
+                if (
+                    file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+                    file.type === 'application/vnd.ms-excel'
+                ) {
+                    try {
+                        const workbook = XLSX.read(buffer, { type: 'buffer' });
+                        const sheetName = workbook.SheetNames[0];
+                        const sheet = workbook.Sheets[sheetName];
+                        const csvContent = XLSX.utils.sheet_to_csv(sheet);
+
+                        // Return as text part
+                        return { text: `\n--- EXCEL DOSYA İÇERİĞİ (${file.name}) ---\n${csvContent}\n--- EXCEL SONU ---\n` };
+                    } catch (e) {
+                        console.error('Excel parsing error:', e);
+                        // Fallback: send as is (might fail if Gemini doesn't support it directly)
+                        return {
+                            inlineData: {
+                                data: buffer.toString('base64'),
+                                mimeType: file.type,
+                            },
+                        };
+                    }
+                }
+
+                // Default for PDF/Images
                 return {
                     inlineData: {
                         data: buffer.toString('base64'),

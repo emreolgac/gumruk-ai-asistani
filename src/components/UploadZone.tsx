@@ -23,7 +23,9 @@ export default function UploadZone({ files, onFilesChange }: UploadZoneProps) {
         onDrop,
         accept: {
             'application/pdf': ['.pdf'],
-            'image/*': ['.png', '.jpg', '.jpeg', '.webp']
+            'image/*': ['.png', '.jpg', '.jpeg', '.webp'],
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
+            'application/vnd.ms-excel': ['.xls']
         },
         maxSize: 10 * 1024 * 1024 // 10MB
     });
@@ -53,7 +55,7 @@ export default function UploadZone({ files, onFilesChange }: UploadZoneProps) {
                             {isDragActive ? 'Dosyaları buraya bırakın' : 'Dosyaları Sürükleyin veya Seçin'}
                         </p>
                         <p className="text-sm font-bold text-slate-400">
-                            Fatura, Çeki Listesi, Ordino (PDF, JPG, PNG)
+                            Fatura, Çeki Listesi, Ordino (PDF, JPG, PNG, XLS, XLSX)
                         </p>
                     </div>
                 </div>
