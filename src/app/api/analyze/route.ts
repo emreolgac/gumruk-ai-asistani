@@ -50,20 +50,39 @@ export async function POST(request: NextRequest) {
         );
 
         const prompt = `
-      Sen uzman bir gümrük müşaviri yardımcısısın. 
-      Ekteki belgeleri dikkatlice analiz et (Fatura, Ordino, Çeki Listesi vb.).
-      
-      Aşağıdaki bilgileri JSON formatında çıkar:
-      1. **gonderici_firma**: Adı, adresi ve ülkesi.
-      2. **alici_firma**: Adı, adresi ve vergi numarası (varsa).
-      3. **belge_bilgileri**: Fatura numarası, fatura tarihi, teslim şekli (Incoterms).
-      4. **esya_listesi**: Her bir kalem için: Tanımı, GTİP (tahmini), brüt ağırlık, net ağırlık, adet, birim fiyat, toplam fiyat, döviz cinsi.
-      5. **toplamlar**: Toplam brüt ağırlık, toplam net ağırlık, toplam fatura tutarı.
-      6. **ozet**: Belgelerin ne olduğuna dair kısa bir Türkçe özet.
+          Sen uzman bir Gümrük Müşaviri ve Sınıflandırma Uzmanısın. 
+          Görevin: Ekteki ticari belgeleri (Fatura, Çeki Listesi, Ordino vb.) Türk Gümrük Mevzuatı (4458 sayılı Kanun) ve 2024-2025 Türk Gümrük Tarife Cetveli'ne göre analiz etmek.
 
-      Eğer belgede bilgi yoksa "Belirtilmemiş" yaz veya null bırak.
-      Sadece saf JSON çıktısı ver, markdown ('''json) kullanma.
-    `;
+          ÖNEMLİ: Özellikle "GTİP" (Gümrük Tarife İstatistik Pozisyonu) tespitinde maksimum hassasiyet göster.
+          - Ürün tanımlarını detaylı incele.
+          - Mümkünse 12 haneli tam GTİP kodu ver. Eğer emin değilsen 6 veya 8 haneli verip yanına "(Tahmini)" notu düş.
+          - Eğer belgede GTİP varsa onu kullan, yoksa en uygununu tespit et.
+
+          Aşağıdaki bilgileri SAF JSON formatında çıkar:
+          1. **gonderici_firma**: Adı, tam adresi ve ülkesi.
+          2. **alici_firma**: Adı, tam adresi ve vergi numarası (VKN).
+          3. **belge_bilgileri**: 
+             - fatura_no: Belge/Fatura numarası.
+             - fatura_tarihi: Gün/Ay/Yıl formatında.
+             - teslim_sekli: Incoterms (EXW, CIF, FOB, DAP vb.).
+          4. **esya_listesi**: Her bir kalem için: 
+             - tanimi: Eşyanın ticari ve teknik tanımı (Türkçe).
+             - gtip: 12 haneli Gümrük Tarife Kodu.
+             - brut_agirlik: Kg cinsinden (sayısal).
+             - net_agirlik: Kg cinsinden (sayısal).
+             - adet: Kap adedi veya miktar.
+             - birim_fiyat: Sayısal değer.
+             - toplam_fiyat: Sayısal değer.
+             - doviz_cinsi: (USD, EUR, TRY vb.).
+          5. **toplamlar**: 
+             - toplam_brut_agirlik
+             - toplam_net_agirlik
+             - toplam_fatura_tutari: (Döviz cinsiyle beraber, örn: "10500.00 EUR").
+          6. **ozet**: Belgelerin içeriğine ve gümrük rejimine dair profesyonel bir Türkçe özet (1-2 cümle).
+
+          Eğer belgede bilgi yoksa "Belirtilmemiş" yaz veya null bırak (sayısal alanlar için 0).
+          Sadece saf JSON çıktısı ver, markdown ('''json) kullanma.
+        `;
 
         // 3. Call Gemini API with Discovery & Fallback
         const genAI = new GoogleGenerativeAI(apiKey);
