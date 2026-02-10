@@ -79,6 +79,9 @@ export async function POST(request: NextRequest) {
 
         const userInstructions = formData.get('userInstructions') as string || '';
         const regime = formData.get('regime') as string || 'ithalat';
+        const fileNames = files.map(f => f.name).join(', ');
+
+        const hasCLP = files.some(f => f.name.toUpperCase().includes('CLP'));
 
         let regimeInstructions = '';
         if (regime === 'ihracat') {
@@ -105,8 +108,11 @@ export async function POST(request: NextRequest) {
         }
 
         const prompt = `
-          DİKKAT: Sen T.C. Ticaret Bakanlığı'na bağlı kıdemli bir "Gümrük Muayene Memuru"sun.
+          DİKKAT: Sen T.C. Ticaret Bakanlığı'na bağlı kıdemli bir "Gümrük Muayene Memuru" ve veri analistisin.
           Görevin: Ekte sunulan ticari belgeleri (Fatura, Çeki Listesi, Konşimento vb.) en ince ayrıntısına kadar incelemek ve 4458 sayılı Gümrük Kanunu ile 2024-2025 Türk Gümrük Tarife Cetveli'ne göre kesin doğrulukta sınıflandırmak.
+
+          ${hasCLP ? `🚨 ÖNEMLİ: Dosyalar arasında "CLP" (Çeki Listesi / Packing List) dosyası tespit edildi. 
+          Kap adedi, net/brüt kilolar, model kodları ve ürün detayları için ÖNCELİKLE "CLP" dosyasındaki verileri baz al.` : ''}
 
           ${regimeInstructions}
 
@@ -115,23 +121,29 @@ export async function POST(request: NextRequest) {
           🚨 KULLANICI (MÜŞTERİ) TALİMATLARI VE EK BİLGİLER:
           "${userInstructions}"
           
-          BU TALİMATLARI KESİNLİKLE DİKKATE AL. Örneğin kullanıcı belirli bir GTİP veya tanım verdiyse, analizinde bunu önceliklendir ve doğruluğunu kontrol et.
+          BU TALİMATLARI KESİNLİKLE DİKKATE AL.
           ----------------------------------------------------------------------------------
           ` : ''}
 
           HEDEFLERİN VE KURALLARIN:
-          1. **HATA PAYI SIFIR OLMALI:** Yanlış GTİP tespiti cezai işlem gerektirir. Bu yüzden her eşyanın tanımını, içeriğini ve kullanım alanını analiz et.
-          2. **GTİP HASSASİYETİ:** Mümkün olan her durumda 12 haneli tam GTİP kodu ver. Sadece %100 emin değilsen yanına "(Tahmini)" yaz, ancak en uygun kodu TESPİT ETMEK ZORUNDASIN.
-          3. **VERİ ÇIKARIMI:** Gönderici, Alıcı, Fatura No, Tarih, Teslim Şekli ve Döviz Cinsi gibi kritik verileri eksiksiz çek.
+          1. **HATA PAYI SIFIR OLMALI:** Yanlış GTİP tespiti cezai işlem gerektirir. 
+          2. **MODEL KODLARI:** Ürünlerin model kodlarını, parça numaralarını veya artikel numaralarını mutlaka "model_kodu" alanına yaz.
+          3. **MENŞEİ TESPİTİ:** Her kalem için menşei ülkesini (ISO 2 haneli kod e.g. TR, CN, DE) tespit et.
+          4. **KAP VE MİKTAR:** Kalem bazlı kap adedi ve miktar (Adet/KG/Set) bilgilerini hassas şekilde çek.
+          5. **TESLİM ŞEKLİ:** Sadece kod olarak çek (Örn: FOB, CIF, EXW). Yanına şehir ismi ekleme.
           
           ÇIKTI FORMATI (SAF JSON):
           - **gonderici_firma**: { adi, adresi (tam), ulkesi }
           - **alici_firma**: { adi, adresi (tam), vergi_no (varsa) }
-          - **belge_bilgileri**: { fatura_no, fatura_tarihi (dd/mm/yyyy), teslim_sekli, beyanname_tipi (IM/EX/TR), rejim_kodu }
+          - **belge_bilgileri**: { fatura_no, fatura_tarihi (dd/mm/yyyy), teslim_sekli (SADECE KOD), beyanname_tipi (IM/EX/TR), rejim_kodu, cikis_ulkesi_kodu }
           - **esya_listesi**: [ 
               { 
-                "tanimi": "Eşyanın ticari ve teknik Türkçe tanımı", 
+                "tanimi": "Ürün Adı + Teknik Özellikler", 
+                "model_kodu": "MODEL/ARTIKEL KODU",
                 "gtip": "1234.56.78.90.00", 
+                "mensei": "TR",
+                "mensei_tam": "TÜRKİYE",
+                "kap_adedi": 0,
                 "brut_agirlik": 0.0, 
                 "net_agirlik": 0.0, 
                 "adet": 0, 
@@ -140,11 +152,11 @@ export async function POST(request: NextRequest) {
                 "doviz_cinsi": "USD" 
               } 
             ]
-          - **toplamlar**: { toplam_brut_agirlik, toplam_net_agirlik, toplam_fatura_tutari }
+          - **toplamlar**: { toplam_brut_agirlik, toplam_net_agirlik, toplam_fatura_tutari, toplam_kap_adedi }
           - **ozet**: "İncelenen belgeler kapsamında... tespit edilmiştir." şeklinde memur üslubuyla kısa özet.
 
-          Eğer bir bilgi belgede AÇIKÇA yoksa, tahminde bulunma ve "Belirtilmemiş" yaz veya sayısal değerse 0 ver.
-          Çıktı sadece ve sadece saf JSON olmalı. Markdown bloğu kullanma.
+          Eğer bir bilgi belgede AÇIKÇA yoksa "Belirtilmemiş" yaz veya sayısal değerse 0 ver.
+          Çıktı sadece ve sadece saf JSON olmalı.
         `;
 
         // 3. Call Gemini API with Discovery & Fallback

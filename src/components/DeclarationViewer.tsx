@@ -135,7 +135,9 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded">
                                     <p className="text-xs text-gray-500 font-bold">Teslim Şekli</p>
-                                    <p>{editableData.belge_bilgileri?.teslim_sekli || '-'}</p>
+                                    <p className="uppercase font-bold text-blue-600">
+                                        {(editableData.belge_bilgileri?.teslim_sekli || '-').split(' ')[0]}
+                                    </p>
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded">
                                     <p className="text-xs text-gray-500 font-bold">Toplam Tutar</p>
