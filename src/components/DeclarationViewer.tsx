@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Save, Download, FileJson, FileSpreadsheet, FileCode, Printer, Table, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { Save, Download, FileJson, FileSpreadsheet, FileCode, Printer, Table, FileText, ChevronDown, ChevronUp } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import BeyannameForm from './BeyannameForm';
@@ -16,6 +16,7 @@ interface DeclarationViewerProps {
 export default function DeclarationViewer({ data }: DeclarationViewerProps) {
     const [editableData, setEditableData] = useState(data);
     const [viewMode, setViewMode] = useState<'list' | 'form' | 'evrim' | 'mavi'>('form');
+    const [expandedListRows, setExpandedListRows] = useState<number[]>([]);
 
     const handleDownload = (format: 'json' | 'xlsx' | 'pdf') => {
         if (format === 'json') {
@@ -151,27 +152,87 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                     <div className="mt-8 col-span-1 md:col-span-2">
                         <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4">Eşya Listesi (Kalemler)</h3>
                         <div className="overflow-x-auto">
-                            <table className="min-w-full text-sm text-left">
-                                <thead className="bg-gray-100 text-gray-700 font-bold">
+                            <table className="min-w-full text-sm text-left border-collapse">
+                                <thead className="bg-gray-800 text-white font-bold">
                                     <tr>
-                                        <th className="p-3 rounded-l">Tanım</th>
-                                        <th className="p-3">GTİP</th>
-                                        <th className="p-3">Brüt (kg)</th>
-                                        <th className="p-3">Net (kg)</th>
-                                        <th className="p-3">Miktar</th>
-                                        <th className="p-3 rounded-r">Fiyat</th>
+                                        <th className="p-4 rounded-tl border-r border-white/10">#</th>
+                                        <th className="p-4 border-r border-white/10">Tanım</th>
+                                        <th className="p-4 border-r border-white/10">GTİP</th>
+                                        <th className="p-4 text-center border-r border-white/10">Kap</th>
+                                        <th className="p-4 text-center border-r border-white/10">Adet</th>
+                                        <th className="p-4 text-center border-r border-white/10">Menşei</th>
+                                        <th className="p-4 border-r border-white/10">Brüt (kg)</th>
+                                        <th className="p-4 border-r border-white/10">Net (kg)</th>
+                                        <th className="p-4 rounded-tr">Fiyat</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
                                     {editableData.esya_listesi?.map((item: any, i: number) => (
-                                        <tr key={i} className="hover:bg-gray-50">
-                                            <td className="p-3">{item.tanimi}</td>
-                                            <td className="p-3 font-mono text-blue-600 font-bold">{item.gtip}</td>
-                                            <td className="p-3">{item.brut_agirlik}</td>
-                                            <td className="p-3">{item.net_agirlik}</td>
-                                            <td className="p-3">{item.adet}</td>
-                                            <td className="p-3">{item.birim_fiyat} {item.doviz_cinsi}</td>
-                                        </tr>
+                                        <React.Fragment key={i}>
+                                            <tr
+                                                onClick={() => {
+                                                    const newExpanded = expandedListRows.includes(i)
+                                                        ? expandedListRows.filter(idx => idx !== i)
+                                                        : [...expandedListRows, i];
+                                                    setExpandedListRows(newExpanded);
+                                                }}
+                                                className={`cursor-pointer transition-colors ${expandedListRows.includes(i) ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
+                                            >
+                                                <td className="p-4 font-bold text-gray-600">{i + 1}</td>
+                                                <td className="p-4">
+                                                    <div className="flex items-center gap-2">
+                                                        {item.tanimi}
+                                                        {expandedListRows.includes(i)
+                                                            ? <ChevronUp className="w-4 h-4 text-gray-400" />
+                                                            : <ChevronDown className="w-4 h-4 text-gray-400" />
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 font-mono text-blue-600 font-bold">{item.gtip}</td>
+                                                <td className="p-4 text-center font-semibold">{item.kap_adedi || '-'}</td>
+                                                <td className="p-4 text-center font-semibold">{item.adet || '-'}</td>
+                                                <td className="p-4 text-center">
+                                                    <span className="bg-gray-100 px-2 py-1 rounded text-xs font-semibold">
+                                                        {item.mensei || editableData.belge_bilgileri?.cikis_ulkesi_kodu || 'TR'}
+                                                    </span>
+                                                </td>
+                                                <td className="p-4">{item.brut_agirlik}</td>
+                                                <td className="p-4">{item.net_agirlik}</td>
+                                                <td className="p-4 font-semibold">{item.birim_fiyat} {item.doviz_cinsi}</td>
+                                            </tr>
+                                            {expandedListRows.includes(i) && (
+                                                <tr className="bg-blue-50">
+                                                    <td colSpan={9} className="p-6 border-t-2 border-blue-200">
+                                                        <div className="grid grid-cols-3 gap-6">
+                                                            <div>
+                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Ürün Detayı</p>
+                                                                <p className="font-semibold text-gray-800">{item.tanimi}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Model Kodu</p>
+                                                                <p className="font-semibold text-blue-600">{item.model_kodu || item.urun_kodu || 'Belirtilmemiş'}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">GTİP</p>
+                                                                <p className="font-mono font-bold text-gray-800">{item.gtip}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Menşei</p>
+                                                                <p className="font-semibold text-gray-800">{item.mensei_tam || '-'}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Birim Fiyat</p>
+                                                                <p className="font-semibold text-gray-800">{item.birim_fiyat} {item.doviz_cinsi}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Toplam Fiyat</p>
+                                                                <p className="font-bold text-gray-900">{item.toplam_fiyat} {item.doviz_cinsi}</p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
                                     ))}
                                 </tbody>
                             </table>
@@ -179,6 +240,7 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                     </div>
                 </div>
             )}
+
 
             {viewMode === 'form' && (
                 <div className="animate-in fade-in zoom-in-95 duration-500">

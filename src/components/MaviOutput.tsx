@@ -1,12 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Package, Tag, Globe, Hash } from 'lucide-react';
 
 interface MaviOutputProps {
     data: any;
 }
 
 export default function MaviOutput({ data }: MaviOutputProps) {
+    const [expandedRows, setExpandedRows] = useState<number[]>([]);
+
+    const toggleRow = (index: number) => {
+        setExpandedRows(prev =>
+            prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+        );
+    };
+
     const getSafe = (path: string[], defaultValue = '') => {
         try {
             return path.reduce((acc, curr) => (acc && acc[curr] ? acc[curr] : null), data) || defaultValue;
@@ -54,27 +63,62 @@ export default function MaviOutput({ data }: MaviOutputProps) {
                 </div>
             </div>
 
-            <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm">
-                <table className="w-full text-left">
-                    <thead className="bg-[#0070f3]/10 text-[#0070f3]">
+            <div className="rounded-2xl overflow-hidden border-2 border-slate-200 shadow-sm">
+                <table className="w-full text-left border-collapse">
+                    <thead className="bg-[#0070f3] text-white">
                         <tr>
-                            <th className="p-4 font-black">KALEM</th>
-                            <th className="p-4 font-black">GTİP KODU</th>
-                            <th className="p-4 font-black">AĞIRLIK (BRÜT)</th>
+                            <th className="p-4 font-black border-r border-white/20">#</th>
+                            <th className="p-4 font-black border-r border-white/20">KALEM</th>
+                            <th className="p-4 font-black border-r border-white/20">GTİP KODU</th>
+                            <th className="p-4 font-black text-center border-r border-white/20">KAP</th>
+                            <th className="p-4 font-black text-center border-r border-white/20">ADET</th>
+                            <th className="p-4 font-black text-center border-r border-white/20">MENŞEİ</th>
+                            <th className="p-4 font-black border-r border-white/20">AĞIRLIK (BRÜT)</th>
                             <th className="p-4 font-black text-right">BEDEL</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {data.esya_listesi?.map((item: any, i: number) => (
-                            <tr key={i} className="hover:bg-slate-50 transition-colors">
-                                <td className="p-4">
-                                    <div className="font-bold">{i + 1}</div>
-                                    <div className="text-[10px] text-slate-400 uppercase font-medium">{item.tanimi?.substring(0, 30)}...</div>
-                                </td>
-                                <td className="p-4 font-mono font-bold text-slate-900 tracking-tighter">{item.gtip}</td>
-                                <td className="p-4 font-bold text-slate-500">{item.brut_agirlik} KG</td>
-                                <td className="p-4 text-right font-black text-[#0070f3]">{item.toplam_fiyat} {item.doviz_cinsi}</td>
-                            </tr>
+                            <React.Fragment key={i}>
+                                <tr
+                                    onClick={() => toggleRow(i)}
+                                    className={`cursor-pointer transition-colors ${expandedRows.includes(i) ? 'bg-blue-50' : 'hover:bg-slate-50'}`}
+                                >
+                                    <td className="p-4 font-bold text-slate-600">{i + 1}</td>
+                                    <td className="p-4">
+                                        <div className="flex items-center gap-2">
+                                            <div>
+                                                <div className="font-bold">{item.tanimi?.substring(0, 40)}{item.tanimi?.length > 40 ? '...' : ''}</div>
+                                            </div>
+                                            {expandedRows.includes(i) ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                                        </div>
+                                    </td>
+                                    <td className="p-4 font-mono font-bold text-slate-900 tracking-tighter">{item.gtip}</td>
+                                    <td className="p-4 text-center font-semibold text-slate-700">{item.kap_adedi || '-'}</td>
+                                    <td className="p-4 text-center font-semibold text-slate-700">{item.adet || '-'}</td>
+                                    <td className="p-4 text-center">
+                                        <span className="bg-slate-100 px-2 py-1 rounded text-xs font-semibold">
+                                            {item.mensei || getSafe(['belge_bilgileri', 'cikis_ulkesi_kodu'], 'TR')}
+                                        </span>
+                                    </td>
+                                    <td className="p-4 font-bold text-slate-500">{item.brut_agirlik} KG</td>
+                                    <td className="p-4 text-right font-black text-[#0070f3]">{item.toplam_fiyat} {item.doviz_cinsi}</td>
+                                </tr>
+                                {expandedRows.includes(i) && (
+                                    <tr className="bg-blue-50">
+                                        <td colSpan={8} className="p-6 border-t-2 border-blue-200">
+                                            <div className="grid grid-cols-4 gap-6">
+                                                <DetailItem icon={<Package size={16} />} label="ÜRÜN DETAYI" value={item.tanimi} span2 />
+                                                <DetailItem icon={<Tag size={16} />} label="MODEL KODU" value={item.model_kodu || item.urun_kodu || 'BELİRTİLMEMİŞ'} highlight />
+                                                <DetailItem icon={<Hash size={16} />} label="GTİP" value={item.gtip} />
+                                                <DetailItem icon={<Globe size={16} />} label="MENŞEİ" value={item.mensei_tam || '-'} />
+                                                <DetailItem icon={<Tag size={16} />} label="BİRİM FİYAT" value={`${item.birim_fiyat} ${item.doviz_cinsi}`} />
+                                                <DetailItem icon={<Tag size={16} />} label="NET AĞIRLIK" value={`${item.net_agirlik} KG`} />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
                         ))}
                     </tbody>
                 </table>
@@ -90,6 +134,18 @@ export default function MaviOutput({ data }: MaviOutputProps) {
                     <p className="font-mono text-[10px] text-green-400 tracking-widest">VERIFIED-BY-MAVI-AI</p>
                 </div>
             </div>
+        </div>
+    );
+}
+
+function DetailItem({ icon, label, value, highlight, span2 }: any) {
+    return (
+        <div className={`space-y-2 ${span2 ? 'col-span-2' : ''}`}>
+            <div className="flex items-center gap-2 text-[#0070f3] opacity-70">
+                {icon}
+                <span className="text-xs font-bold uppercase tracking-wide">{label}</span>
+            </div>
+            <p className={`font-bold text-sm uppercase leading-relaxed ${highlight ? 'text-[#0070f3]' : 'text-slate-800'}`}>{value}</p>
         </div>
     );
 }
