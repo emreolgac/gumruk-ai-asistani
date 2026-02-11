@@ -125,12 +125,40 @@ export async function POST(request: NextRequest) {
           ----------------------------------------------------------------------------------
           ` : ''}
 
+          🚨 KRİTİK KURAL: TAREKS, TARIM VE EMNİYET İZNİ GEREKTİREN EŞYALAR İÇİN SATIR BİRLEŞTİRME YASAKTIR!
+
+          TAREKS/TARIM/EMNİYET İZNİ GEREKTİREN ÜRÜNLER:
+          - Kişisel koruyucu donanım (2026/11)
+          - Oyuncak (2026/10)
+          - Yapı malzemeleri (2026/14)
+          - Tıbbi Malzemeler (2026/16)
+          - Telsiz ve Telekomünikasyon Terminal Ekipmanı (2026/8)
+          - Pil ve akümülatör (2026/15)
+          - Sanayi ürünleri ve Araç yedek parçaları (2026/1, 2026/9, 2026/2, 2026/25, 2026/32)
+          - Kalite denetimine tabi tutulan tarım ürünleri (2026/5)
+          - Deri ve Tekstil ürünleri (2026/18)
+          - Anne ve Bebek ürünleri (2026/17)
+
+          📋 YUKARIDAK İ ÜRÜN GRUPLARINDAKİ HER MODEL NUMARASI AYRI BİR KALEM OLARAK BEYAN EDİLMELİDİR!
+          
+          ÖRNEK YANLIŞ: 
+          - "Oyuncak Araba Model A, B, C - 300 Adet" → TEK KALEM (YANLIŞ!)
+          
+          ÖRNEK DOĞRU:
+          - "Oyuncak Araba Model A - 100 Adet" → BİRİNCİ KALEM
+          - "Oyuncak Araba Model B - 100 Adet" → İKİNCİ KALEM  
+          - "Oyuncak Araba Model C - 100 Adet" → ÜÇÜNCÜ KALEM
+
+          Bu ürünlerde asla "Model A/B/C" veya "Çeşitli Modeller" gibi birleştirmeler yapma!
+          Her modeli ayrı satırda göster, her birinin kendi miktarını, GTİP'ini ve fiyatını yaz.
+
           HEDEFLERİN VE KURALLARIN:
           1. **HATA PAYI SIFIR OLMALI:** Yanlış GTİP tespiti cezai işlem gerektirir. 
           2. **MODEL KODLARI:** Ürünlerin model kodlarını, parça numaralarını veya artikel numaralarını mutlaka "model_kodu" alanına yaz.
           3. **MENŞEİ TESPİTİ:** Her kalem için menşei ülkesini (ISO 2 haneli kod e.g. TR, CN, DE) tespit et.
           4. **KAP VE MİKTAR:** Kalem bazlı kap adedi ve miktar (Adet/KG/Set) bilgilerini hassas şekilde çek.
           5. **TESLİM ŞEKLİ:** Sadece kod olarak çek (Örn: FOB, CIF, EXW). Yanına şehir ismi ekleme.
+          6. **MODEL BAZLI AYRIM:** TAREKS/TARIM/EMNİYET ürünlerinde her farklı model numarası mutlaka ayrı kalem olacak!
           
           ÇIKTI FORMATI (SAF JSON):
           - **gonderici_firma**: { adi, adresi (tam), ulkesi }
