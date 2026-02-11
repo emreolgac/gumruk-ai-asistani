@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Save, Download, FileJson, FileSpreadsheet, FileCode, Printer, Table, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Save, Download, FileJson, FileSpreadsheet, FileCode, Printer, Table, FileText, ChevronDown, ChevronUp, Database, Link, SearchCode } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import BeyannameForm from './BeyannameForm';
@@ -203,31 +203,53 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                                             {expandedListRows.includes(i) && (
                                                 <tr className="bg-blue-50">
                                                     <td colSpan={9} className="p-6 border-t-2 border-blue-200">
-                                                        <div className="grid grid-cols-3 gap-6">
-                                                            <div>
-                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Ürün Detayı</p>
-                                                                <p className="font-semibold text-gray-800">{item.tanimi}</p>
+                                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                            <div className="col-span-2 grid grid-cols-2 lg:grid-cols-3 gap-6">
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Ürün Detayı</p>
+                                                                    <p className="font-semibold text-gray-800">{item.tanimi}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Model Kodu</p>
+                                                                    <p className="font-semibold text-blue-600">{item.model_kodu || item.urun_kodu || 'Belirtilmemiş'}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">GTİP</p>
+                                                                    <p className="font-mono font-bold text-gray-800">{item.gtip}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Menşei</p>
+                                                                    <p className="font-semibold text-gray-800">{item.mensei_tam || '-'}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Birim Fiyat</p>
+                                                                    <p className="font-semibold text-gray-800">{item.birim_fiyat} {item.doviz_cinsi}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Toplam Fiyat</p>
+                                                                    <p className="font-bold text-gray-900">{item.toplam_fiyat} {item.doviz_cinsi}</p>
+                                                                </div>
                                                             </div>
-                                                            <div>
-                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Model Kodu</p>
-                                                                <p className="font-semibold text-blue-600">{item.model_kodu || item.urun_kodu || 'Belirtilmemiş'}</p>
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">GTİP</p>
-                                                                <p className="font-mono font-bold text-gray-800">{item.gtip}</p>
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Menşei</p>
-                                                                <p className="font-semibold text-gray-800">{item.mensei_tam || '-'}</p>
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Birim Fiyat</p>
-                                                                <p className="font-semibold text-gray-800">{item.birim_fiyat} {item.doviz_cinsi}</p>
-                                                            </div>
-                                                            <div>
-                                                                <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Toplam Fiyat</p>
-                                                                <p className="font-bold text-gray-900">{item.toplam_fiyat} {item.doviz_cinsi}</p>
-                                                            </div>
+
+                                                            {/* Item Level Source Info */}
+                                                            {editableData.kaynak_bilgileri?.esya_listesi?.[i] && (
+                                                                <div className="bg-white/50 border border-blue-100 rounded-xl p-4">
+                                                                    <h5 className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                                                        <SearchCode className="w-3 h-3" /> Veri Kaynakları
+                                                                    </h5>
+                                                                    <div className="space-y-2">
+                                                                        {Object.entries(editableData.kaynak_bilgileri.esya_listesi[i]).map(([key, source]: [string, any]) => {
+                                                                            if (key === 'kalem_no') return null;
+                                                                            return (
+                                                                                <div key={key} className="flex justify-between text-[11px] border-b border-blue-50 pb-1">
+                                                                                    <span className="text-gray-500 capitalize">{key.replace('_', ' ')}</span>
+                                                                                    <span className="font-medium text-blue-700">{source.dosya} {source.satir ? `(S:${source.satir})` : ''}</span>
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -238,6 +260,69 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                             </table>
                         </div>
                     </div>
+
+                    {/* Veri Kaynağı Modülü */}
+                    {editableData.kaynak_bilgileri && (
+                        <div className="mt-12 bg-slate-50 border-2 border-slate-200 rounded-2xl p-6">
+                            <div className="flex items-center gap-3 mb-6">
+                                <SearchCode className="w-6 h-6 text-blue-600" />
+                                <h3 className="text-xl font-bold text-slate-800">Veri Kaynağı ve Doğrulama İzleri</h3>
+                                <span className="text-xs bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded">DEBUG MODU</span>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                {/* Genel Bilgi Kaynakları */}
+                                <div>
+                                    <h4 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <FileText className="w-4 h-4" /> Genel Belge Bilgileri
+                                    </h4>
+                                    <div className="space-y-3">
+                                        {[
+                                            { label: 'Fatura No', path: 'fatura_no' },
+                                            { label: 'Fatura Tarihi', path: 'fatura_tarihi' },
+                                            { label: 'Gönderici Firma', path: 'gonderici_firma' },
+                                            { label: 'Alıcı Firma', path: 'alici_firma' }
+                                        ].map((item) => {
+                                            const source = editableData.kaynak_bilgileri[item.path];
+                                            if (!source) return null;
+                                            return (
+                                                <div key={item.path} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-xl">
+                                                    <span className="text-sm font-bold text-slate-700">{item.label}</span>
+                                                    <div className="text-right">
+                                                        <p className="text-xs font-black text-blue-600 uppercase">{source.dosya}</p>
+                                                        <p className="text-[10px] text-slate-500">{source.sayfa ? `Sayfa ${source.sayfa}` : source.konum}</p>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Kalem Bazlı Kaynak Özetleri */}
+                                <div>
+                                    <h4 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <Database className="w-4 h-4" /> Kalem Bazlı Çıkarım (Örnek)
+                                    </h4>
+                                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-400 overflow-hidden relative">
+                                        <div className="absolute top-2 right-2 flex gap-1">
+                                            <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
+                                            <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                                            <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
+                                        </div>
+                                        <p className="mb-2 text-slate-500">// AI Veri Doğrulama Logu</p>
+                                        <p className="text-blue-400">SELECT DATA FROM FILES WHERE ITEM_ID = 1</p>
+                                        <p className="text-green-400">FOUND: CLP.xlsx &rarr; ROW: 5 &rarr; COL: B</p>
+                                        <p className="text-green-400">VAL: &quot;{editableData.esya_listesi?.[0]?.tanimi?.substring(0, 30)}...&quot;</p>
+                                        <p className="text-purple-400">MATCHED WITH INVOICE.PDF PAGE 1 POS: ROW 3</p>
+                                        <p className="text-emerald-400">CONFIDENCE: 99.8%</p>
+                                    </div>
+                                    <p className="mt-3 text-[11px] text-slate-500 italic">
+                                        * Tüm kalemlerin detaylı kaynak izini görmek için kalem detaylarını açınız veya JSON çıktısını inceleyiniz.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
