@@ -121,18 +121,23 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                         {/* Belge Bilgileri */}
                         <div className="space-y-4">
                             <h3 className="font-semibold text-gray-700 border-b pb-2">Belge Özeti</h3>
-                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                <p className="text-sm text-blue-800 font-medium mb-2">AI Özeti</p>
-                                <p className="text-sm text-blue-700 italic">"{editableData.ozet}"</p>
+                            <div className="bg-blue-50 p-5 rounded-xl border border-blue-100 shadow-sm">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-2 h-5 bg-blue-500 rounded-full"></div>
+                                    <p className="text-sm text-blue-800 font-black uppercase tracking-wider">Muayene Memuru AI Raporu</p>
+                                </div>
+                                <div className="text-sm text-blue-900 leading-relaxed space-y-3 whitespace-pre-wrap max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                                    {editableData.ozet}
+                                </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="bg-gray-50 p-3 rounded">
                                     <p className="text-xs text-gray-500 font-bold">Fatura No</p>
-                                    <p>{editableData.belge_bilgileri?.fatura_no || '-'}</p>
+                                    <p className="font-semibold">{editableData.belge_bilgileri?.fatura_no || '-'}</p>
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded">
                                     <p className="text-xs text-gray-500 font-bold">Tarih</p>
-                                    <p>{editableData.belge_bilgileri?.fatura_tarihi || '-'}</p>
+                                    <p className="font-semibold">{editableData.belge_bilgileri?.fatura_tarihi || '-'}</p>
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded">
                                     <p className="text-xs text-gray-500 font-bold">Teslim Şekli</p>
@@ -142,7 +147,7 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                                 </div>
                                 <div className="bg-gray-50 p-3 rounded">
                                     <p className="text-xs text-gray-500 font-bold">Toplam Tutar</p>
-                                    <p>{editableData.toplamlar?.toplam_fatura_tutari}</p>
+                                    <p className="font-bold">{editableData.toplamlar?.toplam_fatura_tutari}</p>
                                 </div>
                             </div>
                         </div>
@@ -150,8 +155,10 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
 
                     {/* Eşya Listesi */}
                     <div className="mt-8 col-span-1 md:col-span-2">
-                        <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4">Eşya Listesi (Kalemler)</h3>
-                        <div className="overflow-x-auto">
+                        <h3 className="font-semibold text-gray-700 border-b pb-2 mb-4 flex items-center gap-2">
+                            <Database className="w-5 h-5 text-gray-400" /> Eşya Listesi (Kalemler)
+                        </h3>
+                        <div className="overflow-x-auto rounded-xl border border-gray-200">
                             <table className="min-w-full text-sm text-left border-collapse">
                                 <thead className="bg-gray-800 text-white font-bold">
                                     <tr>
@@ -176,15 +183,15 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                                                         : [...expandedListRows, i];
                                                     setExpandedListRows(newExpanded);
                                                 }}
-                                                className={`cursor-pointer transition-colors ${expandedListRows.includes(i) ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
+                                                className={`cursor-pointer transition-colors ${expandedListRows.includes(i) ? 'bg-blue-50/50' : 'hover:bg-gray-50'}`}
                                             >
-                                                <td className="p-4 font-bold text-gray-600">{i + 1}</td>
+                                                <td className="p-4 font-bold text-gray-400">{i + 1}</td>
                                                 <td className="p-4">
                                                     <div className="flex items-center gap-2">
-                                                        {item.tanimi}
+                                                        <span className="font-medium text-gray-700 truncate max-w-[200px]">{item.tanimi}</span>
                                                         {expandedListRows.includes(i)
-                                                            ? <ChevronUp className="w-4 h-4 text-gray-400" />
-                                                            : <ChevronDown className="w-4 h-4 text-gray-400" />
+                                                            ? <ChevronUp className="w-4 h-4 text-blue-500" />
+                                                            : <ChevronDown className="w-4 h-4 text-gray-300" />
                                                         }
                                                     </div>
                                                 </td>
@@ -198,58 +205,86 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                                                 </td>
                                                 <td className="p-4">{item.brut_agirlik}</td>
                                                 <td className="p-4">{item.net_agirlik}</td>
-                                                <td className="p-4 font-semibold">{item.birim_fiyat} {item.doviz_cinsi}</td>
+                                                <td className="p-4 font-semibold text-gray-900">{item.birim_fiyat} {item.doviz_cinsi}</td>
                                             </tr>
                                             {expandedListRows.includes(i) && (
-                                                <tr className="bg-blue-50">
-                                                    <td colSpan={9} className="p-6 border-t-2 border-blue-200">
-                                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                                            <div className="col-span-2 grid grid-cols-2 lg:grid-cols-3 gap-6">
-                                                                <div>
-                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Ürün Detayı</p>
-                                                                    <p className="font-semibold text-gray-800">{item.tanimi}</p>
+                                                <tr className="bg-blue-50/30">
+                                                    <td colSpan={9} className="p-0 border-t-2 border-blue-100">
+                                                        <div className="p-8 space-y-8">
+                                                            {/* Item Info Cards */}
+                                                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                                                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Model / Artikel</p>
+                                                                    <p className="text-sm font-bold text-blue-600">{item.model_kodu || 'Belirtilmemiş'}</p>
                                                                 </div>
-                                                                <div>
-                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Model Kodu</p>
-                                                                    <p className="font-semibold text-blue-600">{item.model_kodu || item.urun_kodu || 'Belirtilmemiş'}</p>
+                                                                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Menşei Ülke</p>
+                                                                    <p className="text-sm font-bold text-slate-700">{item.mensei_tam || item.mensei}</p>
                                                                 </div>
-                                                                <div>
-                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">GTİP</p>
-                                                                    <p className="font-mono font-bold text-gray-800">{item.gtip}</p>
+                                                                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Birim Fiyat</p>
+                                                                    <p className="text-sm font-bold text-slate-700">{item.birim_fiyat} {item.doviz_cinsi}</p>
                                                                 </div>
-                                                                <div>
-                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Menşei</p>
-                                                                    <p className="font-semibold text-gray-800">{item.mensei_tam || '-'}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Birim Fiyat</p>
-                                                                    <p className="font-semibold text-gray-800">{item.birim_fiyat} {item.doviz_cinsi}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-xs font-bold text-gray-500 mb-1 uppercase">Toplam Fiyat</p>
-                                                                    <p className="font-bold text-gray-900">{item.toplam_fiyat} {item.doviz_cinsi}</p>
+                                                                <div className="bg-white p-4 rounded-xl shadow-sm border border-blue-100">
+                                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Toplam Kalem Bedeli</p>
+                                                                    <p className="text-sm font-black text-slate-900">{item.toplam_fiyat} {item.doviz_cinsi}</p>
                                                                 </div>
                                                             </div>
 
-                                                            {/* Item Level Source Info */}
-                                                            {editableData.kaynak_bilgileri?.esya_listesi?.[i] && (
-                                                                <div className="bg-white/50 border border-blue-100 rounded-xl p-4">
-                                                                    <h5 className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                                                        <SearchCode className="w-3 h-3" /> Veri Kaynakları
-                                                                    </h5>
-                                                                    <div className="space-y-2">
-                                                                        {Object.entries(editableData.kaynak_bilgileri.esya_listesi[i]).map(([key, source]: [string, any]) => {
-                                                                            if (key === 'kalem_no') return null;
-                                                                            return (
-                                                                                <div key={key} className="flex justify-between text-[11px] border-b border-blue-50 pb-1">
-                                                                                    <span className="text-gray-500 capitalize">{key.replace('_', ' ')}</span>
-                                                                                    <span className="font-medium text-blue-700">{source.dosya} {source.satir ? `(S:${source.satir})` : ''}</span>
-                                                                                </div>
-                                                                            );
-                                                                        })}
+                                                            {/* Detailed Source Tracking Section */}
+                                                            <div className="bg-white rounded-2xl border border-blue-200 shadow-sm overflow-hidden">
+                                                                <div className="bg-slate-50 px-6 py-4 border-b border-blue-100 flex items-center justify-between">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <SearchCode className="w-5 h-5 text-blue-600" />
+                                                                        <h4 className="font-bold text-slate-800">Veri Yolculuğu & Çıkarım Detayları</h4>
                                                                     </div>
+                                                                    <span className="text-[10px] font-black bg-blue-600 text-white px-2 py-1 rounded">DOĞRULANMIŞ VERİ</span>
                                                                 </div>
-                                                            )}
+                                                                <div className="p-0 overflow-x-auto">
+                                                                    <table className="min-w-full text-xs text-left">
+                                                                        <thead>
+                                                                            <tr className="bg-slate-50/50 text-slate-400 uppercase font-black tracking-widest border-b border-blue-50">
+                                                                                <th className="px-6 py-3">Veri Alanı</th>
+                                                                                <th className="px-6 py-3">Çekilen Değer</th>
+                                                                                <th className="px-6 py-3">Kaynak Dosya</th>
+                                                                                <th className="px-6 py-3">Konum / Satır / Sütun</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody className="divide-y divide-blue-50">
+                                                                            {editableData.kaynak_bilgileri?.esya_listesi?.[i]?.alanlar ? (
+                                                                                Object.entries(editableData.kaynak_bilgileri.esya_listesi[i].alanlar).map(([key, source]: [string, any]) => (
+                                                                                    <tr key={key} className="hover:bg-blue-50/50 transition-colors">
+                                                                                        <td className="px-6 py-4 font-bold text-slate-600 capitalize">{key.replace('_', ' ')}</td>
+                                                                                        <td className="px-6 py-4 text-slate-900">
+                                                                                            <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded border border-blue-100 font-mono">
+                                                                                                {String(item[key] || '-')}
+                                                                                            </span>
+                                                                                        </td>
+                                                                                        <td className="px-6 py-4">
+                                                                                            <div className="flex items-center gap-2 text-blue-600 font-bold">
+                                                                                                <Link className="w-3 h-3 text-blue-400" />
+                                                                                                {source.dosya}
+                                                                                            </div>
+                                                                                        </td>
+                                                                                        <td className="px-6 py-4 text-slate-500 font-medium">
+                                                                                            {source.satir ? `Satır: ${source.satir}` : ''}
+                                                                                            {source.sutun ? ` | Sütun: ${source.sutun}` : ''}
+                                                                                            {source.sayfa ? ` | Sayfa: ${source.sayfa}` : ''}
+                                                                                            {source.konum ? ` | ${source.konum}` : ''}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                ))
+                                                                            ) : (
+                                                                                <tr>
+                                                                                    <td colSpan={4} className="px-6 py-10 text-center text-slate-400 italic">
+                                                                                        Bu kalem için ayrıntılı kaynak bilgisi henüz analiz edilmedi.
+                                                                                    </td>
+                                                                                </tr>
+                                                                            )}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>

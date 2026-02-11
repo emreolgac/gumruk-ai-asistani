@@ -181,32 +181,36 @@ export async function POST(request: NextRequest) {
               } 
             ]
           - **toplamlar**: { toplam_brut_agirlik, toplam_net_agirlik, toplam_fatura_tutari, toplam_kap_adedi }
-          - **ozet**: "İncelenen belgeler kapsamında... tespit edilmiştir." şeklinde memur üslubuyla kısa özet.
+          - **ozet**: "T.C. Ticaret Bakanlığı Muayene Memuru Raporu: ... kapsamlı inceleme tamamlanmıştır." şeklinde çok detaylı, resmi ve uzun bir memur raporu. (En az 3-4 paragraf; rejim, firmalar ve eşyalar hakkında teknik detaylar içermeli).
           - **kaynak_bilgileri**: {
-              "fatura_no": { "dosya": "invoice.pdf", "sayfa": 1, "konum": "Üst sağ köşe" },
-              "fatura_tarihi": { "dosya": "invoice.pdf", "sayfa": 1, "konum": "Tarih alanı" },
-              "gonderici_firma": { "dosya": "invoice.pdf", "sayfa": 1, "konum": "Üst kısım" },
-              "alici_firma": { "dosya": "invoice.pdf", "sayfa": 1, "konum": "Solda alıcı bilgileri bölümü" },
+              "fatura_no": { "dosya": "...", "sayfa": 1, "konum": "...", "guven_skoru": 0.99 },
+              "fatura_tarihi": { "dosya": "...", "sayfa": 1, "konum": "...", "guven_skoru": 0.99 },
+              "gonderici_firma": { "dosya": "...", "sayfa": 1, "konum": "...", "guven_skoru": 0.99 },
+              "alici_firma": { "dosya": "...", "sayfa": 1, "konum": "...", "guven_skoru": 0.99 },
               "esya_listesi": [
                 {
                   "kalem_no": 1,
-                  "tanimi": { "dosya": "CLP.xlsx", "satir": 5, "sutun": "B (Description)" },
-                  "model_kodu": { "dosya": "CLP.xlsx", "satir": 5, "sutun": "C (Model)" },
-                  "adet": { "dosya": "CLP.xlsx", "satir": 5, "sutun": "D (Quantity)" },
-                  "brut_agirlik": { "dosya": "CLP.xlsx", "satir": 5, "sutun": "F (Gross Weight)" },
-                  "net_agirlik": { "dosya": "CLP.xlsx", "satir": 5, "sutun": "E (Net Weight)" },
-                  "birim_fiyat": { "dosya": "invoice.pdf", "sayfa": 1, "konum": "Fiyat tablosu, 1. satır" },
-                  "toplam_fiyat": { "dosya": "invoice.pdf", "sayfa": 1, "konum": "Fiyat tablosu, 1. satır toplam" }
+                  "alanlar": {
+                    "tanimi": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "gtip": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "model_kodu": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "adet": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "birim_fiyat": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "toplam_fiyat": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "brut_agirlik": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "net_agirlik": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "mensei": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." },
+                    "kap_adedi": { "dosya": "...", "satir": 0, "sutun": "...", "konum": "..." }
+                  }
                 }
               ]
             }
 
-          🔍 KAYNAK BİLGİLERİ İÇİN KURALLAR:
-          - Hangi dosyadan veri çektiğini belirt (dosya adı)
-          - Excel/CSV ise: satır numarası ve sütun adı/harfi
-          - PDF ise: sayfa numarası ve genel konum (örn: "Üst sağ", "Tablo satır 3")
-          - Her veri alanı için ayrı kaynak bilgisi ver
-          - Eğer birden fazla dosyadan çapraz doğrulama yaptıysan, ana kaynağı belirt
+          🔍 KAYNAK BİLGİLERİ İÇİN KESİN KURALLAR:
+          - HER BİR ANALİZ EDİLEN ALAN İÇİN KAYNAK BELİRTİLECEK. (Boş bırakma!)
+          - Excel/CSV ise: "satir" (sayı) ve "sutun" (Harf veya Başlık) mutlaka dolu olmalı.
+          - PDF/Resim ise: "sayfa" (sayı) ve "konum" (örn: "Sol orta tablo", "Sayfa altı") dolu olmalı.
+          - "ozet" kısmında Muayene Memuru üslubuyla teknik rapor yaz.
 
           Eğer bir bilgi belgede AÇIKÇA yoksa "Belirtilmemiş" yaz veya sayısal değerse 0 ver.
           Çıktı sadece ve sadece saf JSON olmalı.
