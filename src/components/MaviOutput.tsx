@@ -210,8 +210,8 @@ export default function MaviOutput({ data }: MaviOutputProps) {
                                 {data.denetmen_raporu.score}<span className="text-xl text-slate-500">/100</span>
                             </div>
                             <div className={`text-[10px] font-bold uppercase py-1 px-2 rounded-full inline-block mt-1 ${data.denetmen_raporu.score >= 80 ? 'bg-green-500/20 text-green-400' :
-                                    data.denetmen_raporu.score >= 50 ? 'bg-yellow-500/20 text-yellow-400' :
-                                        'bg-red-500/20 text-red-400'
+                                data.denetmen_raporu.score >= 50 ? 'bg-yellow-500/20 text-yellow-400' :
+                                    'bg-red-500/20 text-red-400'
                                 }`}>
                                 {data.denetmen_raporu.verificationStatus}
                             </div>
@@ -288,4 +288,8 @@ function DetailItem({ icon, label, value, highlight, span2 }: any) {
             <p className={`font-bold text-sm uppercase leading-relaxed ${highlight ? 'text-[#0070f3]' : 'text-slate-800'}`}>{value}</p>
         </div>
     );
+}
+
+function formatCurrency(value: number) {
+    return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value || 0);
 }
