@@ -19,6 +19,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   credits       Int             @default(5) // Free credits
+  subscriptionPlan String       @default("FREE") // FREE, PRO, ENTERPRISE
   isPremium     Boolean         @default(false)
   role          String          @default("USER") // USER or ADMIN
   createdAt     DateTime        @default(now())
@@ -26,6 +27,7 @@ model User {
   declarations  Declaration[]
   payments      Payment[]
   apiUsages     ApiUsage[]
+  creditTransactions CreditTransaction[]
 }
 
 model Account {
@@ -212,4 +214,53 @@ model Banner {
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// --- NEW MODULES FOR ZERO ERROR & BILLING ---
+
+// GTİP ve Vergi Oranları
+model TariffCode {
+  id                  String       @id @default(cuid())
+  code                String       @unique // e.g. "8504.40.30.00.00"
+  description         String
+  
+  // Tax Rates (Percentages, e.g., 18.0 for 18%)
+  gvRate              Float        @default(0) // Gümrük Vergisi
+  kdvRate             Float        @default(20) // KDV (Standard 20%)
+  otvRate             Float        @default(0) // ÖTV
+  damgaRate           Float        @default(0) // Damga Vergisi (Fixed or Rate)
+  kkdfRate            Float        @default(0) // KKDF
+  igvRate             Float        @default(0) // İlave Gümrük Vergisi
+
+  // Compliance
+  isProhibited        Boolean      @default(false)
+  isPermissionRequired Boolean     @default(false)
+  requirements        String?      // JSON string for specific document requirements
+
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+
+// Mevzuat Bilgi Bankası (RAG Source)
+model Regulation {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // The text chunk
+  category    String   // e.g., "Gumruk Kanunu", "Genelge"
+  sourceUrl   String?
+  embeddingId String?  // Reference to vector store if separate
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Kredi İşlem Geçmişi
+model CreditTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  amount      Int      // Negative for usage (-1), Positive for purchase (+100)
+  type        String   // "USAGE", "REFILL", "ADMIN_GIFT"
+  description String?  // e.g., "Declaration Analysis: invoice.pdf"
+  createdAt   DateTime @default(now())
 }

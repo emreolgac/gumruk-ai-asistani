@@ -308,22 +308,78 @@ export async function POST(request: NextRequest) {
         // Clean up markdown code blocks if present
         let cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
 
+        // 5. Post-Process with Tax Engine & Database Verification
         let parsedResult;
         try {
             parsedResult = JSON.parse(cleanJson);
+
+            // --- NEW: Tax Calculation & Verification Integration ---
+            if (parsedResult.esya_listesi && Array.isArray(parsedResult.esya_listesi)) {
+                await Promise.all(parsedResult.esya_listesi.map(async (item: any) => {
+                    // 1. Clean GTIP (remove dots/spaces)
+                    const cleanGtip = item.gtip?.replace(/[^0-9]/g, '');
+
+                    if (cleanGtip && cleanGtip.length >= 6) {
+                        // Try to find exact match or partial match (first 6 digits)
+                        const tariff = await prisma.tariffCode.findFirst({
+                            where: {
+                                code: { startsWith: cleanGtip.substring(0, 6) }
+                            }
+                        });
+
+                        if (tariff) {
+                            // Found tariff, calculate taxes
+                            const cif = item.toplam_fiyat || 0;
+                            // Mock exchange rate for now (In real app, fetch from TCMB)
+                            const exchangeRate = 34.50;
+
+                            const { calculateTaxes } = await import('@/lib/tax-engine');
+                            const taxes = calculateTaxes(cif, exchangeRate, tariff);
+
+                            // Append tax info to the item
+                            item.vergiler = {
+                                gvHesa: taxes.gvAmount,
+                                kdvHesap: taxes.kdvAmount,
+                                otvHesap: taxes.otvAmount,
+                                damgaHesap: taxes.damgaAmount,
+                                kkdfHesap: taxes.kkdfAmount,
+                                igvHesap: taxes.igvAmount,
+                                toplamVergi: taxes.totalTax,
+                                maliyet: taxes.grandTotal,
+                                oranlar: taxes.details
+                            };
+                            item.uyarilar = [];
+                            if (tariff.isProhibited) item.uyarilar.push("YASAKLI ÜRÜN!");
+                            if (tariff.isPermissionRequired) item.uyarilar.push("İZNE TABİ: " + (tariff.requirements || "Belge Gerekli"));
+                        }
+                    }
+                }));
+            }
+            // -------------------------------------------------------
+
+            // --- NEW: Auditor Agent Integration ---
+            try {
+                const { auditDeclaration } = await import('@/lib/agents/auditor');
+                const auditReport = await auditDeclaration(parsedResult, prompt);
+                parsedResult.denetmen_raporu = auditReport;
+            } catch (auditError) {
+                console.error("Auditor failed:", auditError);
+                // Continue without audit report
+            }
+            // --------------------------------------
+
         } catch (e) {
-            console.error("JSON Parse Error:", e);
-            // Fallback: Return raw text if JSON parsing fails
+            console.error("JSON Parse/Processing Error:", e);
             return NextResponse.json({
                 result: {
                     ozet: responseText,
                     raw: true,
-                    warning: "AI çıktısı tam JSON formatında değildi, ham metin gösteriliyor."
+                    warning: "AI çıktısı işlenirken hata oluştu veya JSON bozuk."
                 }
             });
         }
 
-        // 5. Save to Database for History
+        // 6. Save to Database for History
         try {
             if (session?.user?.email) {
                 const user = await prisma.user.findUnique({
