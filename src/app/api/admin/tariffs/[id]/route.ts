@@ -4,7 +4,8 @@ import prisma from '@/lib/prisma';
 import { auth } from '@/auth';
 
 
-export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
+
+export async function PUT(request: Request, props: any) {
     const params = await props.params;
     const session = await auth();
     if (!session?.user || session.user.role !== 'ADMIN') {
@@ -37,7 +38,7 @@ export async function PUT(request: Request, props: { params: Promise<{ id: strin
     }
 }
 
-export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: Request, props: any) {
     const params = await props.params;
     const session = await auth();
     if (!session?.user || session.user.role !== 'ADMIN') {
