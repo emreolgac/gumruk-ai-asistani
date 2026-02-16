@@ -2,23 +2,28 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 
-// Helper to check admin
-async function isAdmin() {
+// Helper to check admin and return admin user info
+async function getAdminUser() {
     const session = await auth();
-    if (!session?.user?.email) return false;
+    if (!session?.user?.email) return null;
 
     const user = await prisma.user.findUnique({
         where: { email: session.user.email },
-        select: { role: true },
+        select: { id: true, email: true, role: true },
     });
 
-    return user?.role === 'ADMIN';
+    if (user?.role !== 'ADMIN') return null;
+    return user;
 }
+
+// Whitelisted fields for user update
+const ALLOWED_UPDATE_FIELDS = ['role', 'credits', 'isPremium', 'name', 'subscriptionPlan'];
 
 // GET - List all users
 export async function GET() {
     try {
-        if (!(await isAdmin())) {
+        const admin = await getAdminUser();
+        if (!admin) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
@@ -45,23 +50,36 @@ export async function GET() {
     }
 }
 
-// PATCH - Update user
+// PATCH - Update user (whitelisted fields only)
 export async function PATCH(request: Request) {
     try {
-        if (!(await isAdmin())) {
+        const admin = await getAdminUser();
+        if (!admin) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
         const body = await request.json();
-        const { userId, ...updateData } = body;
+        const { userId, ...rawData } = body;
 
         if (!userId) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
         }
 
+        // Only allow whitelisted fields
+        const safeData: Record<string, any> = {};
+        for (const key of ALLOWED_UPDATE_FIELDS) {
+            if (key in rawData) {
+                safeData[key] = rawData[key];
+            }
+        }
+
+        if (Object.keys(safeData).length === 0) {
+            return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
+        }
+
         const user = await prisma.user.update({
             where: { id: userId },
-            data: updateData,
+            data: safeData,
         });
 
         return NextResponse.json({ user });
@@ -71,10 +89,11 @@ export async function PATCH(request: Request) {
     }
 }
 
-// DELETE - Delete user
+// DELETE - Delete user (with self-delete protection)
 export async function DELETE(request: Request) {
     try {
-        if (!(await isAdmin())) {
+        const admin = await getAdminUser();
+        if (!admin) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
@@ -83,6 +102,11 @@ export async function DELETE(request: Request) {
 
         if (!userId) {
             return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+        }
+
+        // Prevent admin from deleting themselves
+        if (userId === admin.id) {
+            return NextResponse.json({ error: 'Kendi hesabınızı silemezsiniz' }, { status: 400 });
         }
 
         await prisma.user.delete({
@@ -99,7 +123,8 @@ export async function DELETE(request: Request) {
 // POST - Create user manually
 export async function POST(request: Request) {
     try {
-        if (!(await isAdmin())) {
+        const admin = await getAdminUser();
+        if (!admin) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 

@@ -43,7 +43,7 @@ export default function AdminLayout({
         if (status === 'loading') return;
 
         if (!session) {
-            router.push('/tr/login');
+            router.push('/tr/admin-login');
             return;
         }
 
@@ -142,7 +142,7 @@ export default function AdminLayout({
                         {isSidebarOpen && <span className="font-bold text-sm leading-none">Siteye Git</span>}
                     </Link>
                     <button
-                        onClick={() => signOut({ callbackUrl: '/tr/login' })}
+                        onClick={() => signOut({ callbackUrl: '/tr/admin-login' })}
                         className="w-full flex items-center gap-4 px-4 py-3 text-red-400/60 hover:text-red-400 hover:bg-red-500/5 rounded-xl transition-all font-bold text-sm"
                     >
                         <LogOut className="w-5 h-5" />
