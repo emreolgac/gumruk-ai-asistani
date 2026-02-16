@@ -3,15 +3,15 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { auth } from '@/auth';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+
+export async function PUT(request: Request, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const session = await auth();
     if (!session?.user || session.user.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
-        // Check if params needs to be awaited (Next.js 15+ change, though we are on 14/15 transition usually safe to await)
-        // For safety in diverse environments:
         const { id } = params;
 
         const body = await request.json();
@@ -37,7 +37,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const session = await auth();
     if (!session?.user || session.user.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
