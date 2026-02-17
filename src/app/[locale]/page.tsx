@@ -162,7 +162,7 @@ export default function HomePage() {
       </section>
 
       {/* Module 1: Trust Stats */}
-      <section className="py-20 border-y border-white/5 bg-slate-950/30 backdrop-blur-sm">
+      <section className="py-20 border-y border-white/5 bg-blue-600/5 backdrop-blur-sm">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
             <TrustStat value="50M+" label="ANALYSED DOCUMENTS" />
@@ -174,7 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* Module 2: Key Capabilities */}
-      <section id="features" className="py-32 relative">
+      <section id="features" className="py-32 relative bg-slate-900/40">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mb-24 text-center lg:text-left mx-auto lg:mx-0">
             <h2 className="text-4xl lg:text-6xl font-black mb-8 leading-tight tracking-tighter text-white">Öne Çıkan Özellikler</h2>
@@ -247,46 +247,11 @@ export default function HomePage() {
               icon={<CheckCircle2 className="w-8 h-8" />}
             />
           </div>
-
-          {/* Verification Module Visualization from image */}
-          <div className="mt-40 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="glass p-8 rounded-3xl border-white/10 space-y-8">
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs font-black text-blue-400 uppercase tracking-widest">
-                  <span>Uploading Documents...</span>
-                  <span>100%</span>
-                </div>
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <div className="h-full bg-blue-600 w-full shadow-[0_0_10px_rgba(37,99,235,0.8)]" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs font-black text-blue-400 uppercase tracking-widest">
-                  <span>AI Parsing...</span>
-                  <span>82%</span>
-                </div>
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: '82%' }}
-                    transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
-                    className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 shadow-[0_0_10px_rgba(37,99,235,0.8)]"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition" />
-              <div className="relative glass p-4 rounded-2xl border-white/10">
-                <img src="https://img.freepik.com/premium-photo/modern-shipping-logistics-background-with-world-map_23-2151601053.jpg" alt="Logistics AI" className="w-full h-auto rounded-xl grayscale opacity-60" />
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* Module 4: Pricing */}
-      <section id="pricing" className="py-32 relative">
+      <section id="pricing" className="py-32 relative bg-slate-900/40">
         <div className="container mx-auto px-6">
           <div className="text-center mb-24">
             <h2 className="text-4xl lg:text-6xl font-black mb-6 tracking-tighter text-white">Fiyatlandırma</h2>
@@ -318,7 +283,7 @@ export default function HomePage() {
       </section>
 
       {/* Module 6: FAQ */}
-      <section className="py-32 bg-slate-950">
+      <section className="py-32 bg-slate-900/40">
         <div className="container mx-auto px-6 max-w-4xl">
           <h2 className="text-4xl lg:text-5xl font-black mb-16 text-center tracking-tighter text-white">Sıkça Sorulan Sorular</h2>
           <div className="space-y-4">
