@@ -19,6 +19,7 @@ import {
   Facebook,
   Twitter,
   Linkedin,
+  Github,
   Instagram,
   Send,
   Search,
@@ -393,57 +394,80 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="pt-24 pb-12 bg-slate-950 relative border-t border-white/5">
+      <footer className="py-24 bg-primary-dark border-t border-white/5 relative overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-full h-[500px] bg-accent-ai-blue/5 blur-[150px] -z-10" />
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
-            <div className="space-y-6">
-              <Link href="/tr" className="flex items-center gap-3 group">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-20">
+            <div className="col-span-2 lg:col-span-1 space-y-8">
+              <Link href="/tr" className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-accent-ai-blue rounded-xl flex items-center justify-center shadow-enterprise">
                   <FileSearch className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-xl font-black tracking-tighter text-white">GÜMRÜK AI</span>
               </Link>
-              <p className="text-gray-400 text-sm leading-relaxed font-medium">Yapay zeka gücüyle gümrük operasyonlarınızı modernize ederek hata payını sıfıra indirin.</p>
-              <div className="flex items-center gap-4">
-                <SocialButton icon={<Twitter className="w-4 h-4" />} />
-                <SocialButton icon={<Linkedin className="w-4 h-4" />} />
-                <SocialButton icon={<Facebook className="w-4 h-4" />} />
+              <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
+                Yapay zeka gücüyle gümrükleme süreçlerini otonomlaştırıyoruz. Geleceğin dış ticaretini bugünden inşa edin.
+              </p>
+              <div className="flex gap-4">
+                <SocialButton icon={<Github className="w-5 h-5" />} />
+                <SocialButton icon={<Twitter className="w-5 h-5" />} />
+                <SocialButton icon={<Linkedin className="w-5 h-5" />} />
               </div>
             </div>
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-8 text-white/30">Hızlı Linkler</h4>
+
+            <div className="space-y-6">
+              <h4 className="text-white font-black text-xs uppercase tracking-[0.2em]">Şirket</h4>
               <ul className="space-y-4">
-                <li><Link href="/" className="text-sm font-bold text-gray-500 hover:text-white transition-colors">Ana Sayfa</Link></li>
-                <li><Link href="#features" className="text-sm font-bold text-gray-400 hover:text-white transition-colors">Yetenekler</Link></li>
-                <li><Link href="/tr/blogs" className="text-sm font-bold text-gray-500 hover:text-white transition-colors">Teknoloji Blog</Link></li>
-                <li><Link href="/tr/contact" className="text-sm font-bold text-gray-500 hover:text-white transition-colors">Destek Merkezin</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Hakkımızda</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Kariyer</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Basın Kiti</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">İletişim</Link></li>
               </ul>
             </div>
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-8 text-white/30">Hizmetlerimiz</h4>
+
+            <div className="space-y-6">
+              <h4 className="text-white font-black text-xs uppercase tracking-[0.2em]">Ürünler</h4>
               <ul className="space-y-4">
-                <li className="text-sm font-bold text-gray-500 hover:text-blue-400 cursor-pointer">AI Belge Analizi</li>
-                <li className="text-sm font-bold text-gray-500 hover:text-blue-400 cursor-pointer">Otomatik GTİP Tespiti</li>
-                <li className="text-sm font-bold text-gray-500 hover:text-blue-400 cursor-pointer">Gümrük Mevzuat Asistanı</li>
-                <li className="text-sm font-bold text-gray-500 hover:text-blue-400 cursor-pointer">XML Beyanname Çıktısı</li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">AI Analiz</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">GTİP Sorgulama</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">ERP Entegrasyonu</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Özel Çözümler</Link></li>
               </ul>
             </div>
-            <div>
-              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-8 text-white/30">İletişim</h4>
-              <p className="text-sm font-bold text-gray-400 leading-relaxed mb-6">
-                Sürecinizi hızlandırmak için <br />
-                ekibimizle görüşün.
-              </p>
-              <Link href="/tr/contact" className="text-sm font-black text-blue-500 hover:text-blue-400 flex items-center gap-2">
-                Bize Ulaşın <ArrowRight className="w-4 h-4" />
-              </Link>
+
+            <div className="space-y-6">
+              <h4 className="text-white font-black text-xs uppercase tracking-[0.2em]">Kaynaklar</h4>
+              <ul className="space-y-4">
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Blog</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Dökümantasyon</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">API Referansı</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Topluluk</Link></li>
+              </ul>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-white font-black text-xs uppercase tracking-[0.2em]">Yasal</h4>
+              <ul className="space-y-4">
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">KVKK Aydınlatma</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Kullanım Koşulları</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Çerez Politikası</Link></li>
+                <li><Link href="#" className="text-slate-400 hover:text-accent-glow text-sm transition-colors">Güvenlik</Link></li>
+              </ul>
             </div>
           </div>
-          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
-            <p className="text-xs font-bold text-gray-600 tracking-wide uppercase">© 2024 GÜMRÜK AI TECHNOLOGY. TÜM HAKLARI SAKLIDIR.</p>
-            <div className="flex items-center gap-8">
-              <Link href="/privacy" className="text-[10px] font-black text-gray-600 hover:text-white transition-all">GİZLİLİK POLİTİKASI</Link>
-              <Link href="/terms" className="text-[10px] font-black text-gray-600 hover:text-white transition-all">KULLANIM ŞARTLARI</Link>
+
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+            <p className="text-slate-500 text-xs font-medium">
+              © 2026 Gümrük AI. Tüm hakları saklıdır.
+            </p>
+            <div className="flex items-center gap-6">
+              <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-400">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                SİSTEMLER AKTİF
+              </span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                ISTANBUL, TR
+              </span>
             </div>
           </div>
         </div>
@@ -456,70 +480,44 @@ export default function HomePage() {
 
 function AiDocumentPipelineVisual() {
   return (
-    <div className="relative w-full max-w-lg aspect-square mx-auto">
-      <div className="absolute inset-0 bg-accent-ai-blue/10 blur-[120px] rounded-full animate-pulse" />
+    <div className="relative w-full max-w-2xl aspect-square mx-auto scale-110 lg:scale-125">
+      <div className="absolute inset-0 bg-accent-ai-blue/10 blur-[150px] rounded-full animate-pulse" />
 
       {/* Central Processing Sphere */}
       <motion.div
         animate={{
-          scale: [1, 1.1, 1],
+          scale: [1, 1.05, 1],
           rotate: [0, 90, 180, 270, 360]
         }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 m-auto w-48 h-48 rounded-full border border-accent-ai-blue/30 flex items-center justify-center bg-accent-ai-blue/5 shadow-[0_0_50px_rgba(0,174,239,0.2)]"
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 m-auto w-72 h-72 rounded-full border border-accent-ai-blue/30 flex items-center justify-center bg-accent-ai-blue/5 shadow-[0_0_80px_rgba(14,165,233,0.3)]"
       >
-        <div className="w-32 h-32 rounded-full border-t-2 border-accent-glow animate-spin" />
-        <Bot className="absolute w-12 h-12 text-accent-glow" />
+        <div className="w-56 h-56 rounded-full border-t-2 border-accent-glow animate-spin" />
+        <Bot className="absolute w-20 h-20 text-accent-glow" />
       </motion.div>
 
       {/* Floating Document Cards */}
       <motion.div
-        animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
-        transition={{ duration: 4, repeat: Infinity }}
-        className="absolute top-10 left-0 glass p-4 rounded-xl shadow-enterprise border-accent-ai-blue/20"
+        animate={{ y: [0, -20, 0], x: [0, 15, 0] }}
+        transition={{ duration: 5, repeat: Infinity }}
+        className="absolute top-0 left-0 glass p-6 rounded-2xl shadow-enterprise border-accent-ai-blue/20"
       >
-        <div className="flex items-center gap-3">
-          <FileText className="w-5 h-5 text-accent-glow" />
-          <span className="text-[10px] font-data text-white">Commercial Invoice.pdf</span>
+        <div className="flex items-center gap-4">
+          <FileText className="w-6 h-6 text-accent-glow" />
+          <span className="text-[12px] font-data text-white">Ticari_Fatura.pdf</span>
         </div>
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, 15, 0], x: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-        className="absolute bottom-20 left-10 glass p-4 rounded-xl shadow-enterprise border-accent-ai-blue/20"
+        animate={{ y: [0, 20, 0], x: [0, -15, 0] }}
+        transition={{ duration: 6, repeat: Infinity, delay: 1 }}
+        className="absolute bottom-10 left-0 glass p-6 rounded-2xl shadow-enterprise border-accent-ai-blue/20"
       >
-        <div className="flex items-center gap-3">
-          <Layers className="w-5 h-5 text-indigo-400" />
-          <span className="text-[10px] font-data text-white">PackingList.xlsx</span>
+        <div className="flex items-center gap-4">
+          <Layers className="w-6 h-6 text-indigo-400" />
+          <span className="text-[12px] font-data text-white">Ceki_Listesi.xlsx</span>
         </div>
       </motion.div>
-
-      {/* Connection Lines (Simulated with div) */}
-      <div className="absolute inset-0 pointer-events-none">
-        <svg className="w-full h-full opacity-20" viewBox="0 0 400 400">
-          <motion.path
-            d="M80 60 Q 200 200 200 200"
-            stroke="currentColor"
-            className="text-accent-glow"
-            fill="transparent"
-            strokeWidth="1"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-          <motion.path
-            d="M100 320 Q 200 200 200 200"
-            stroke="currentColor"
-            className="text-accent-glow"
-            fill="transparent"
-            strokeWidth="1"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-          />
-        </svg>
-      </div>
 
       <AiStatusBox />
     </div>
@@ -532,33 +530,33 @@ function AiStatusBox() {
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.5 }}
-      className="absolute top-10 right-0 lg:-right-10 glass p-6 rounded-2xl border-accent-ai-blue/20 shadow-enterprise w-72 animate-float"
+      className="absolute top-20 -right-4 lg:-right-32 glass p-10 rounded-[2.5rem] border-accent-ai-blue/40 shadow-enterprise w-96 animate-float"
     >
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-          <span className="text-[10px] font-black tracking-widest text-slate-400">DECLARATION READY</span>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-4 h-4 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_15px_rgba(52,211,153,0.6)]" />
+          <span className="text-[12px] font-black tracking-widest text-slate-300">BEYANNAME HAZIR</span>
         </div>
-        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        <CheckCircle2 className="w-6 h-6 text-emerald-400" />
       </div>
-      <div className="space-y-4">
-        <div className="grid grid-cols-3 text-[10px] font-data py-2 border-b border-white/5">
+      <div className="space-y-5">
+        <div className="grid grid-cols-3 text-xs font-data py-4 border-b border-white/5">
           <span className="text-accent-ai-blue font-bold">8471.30</span>
-          <span className="text-white truncate px-1">Laptop</span>
-          <span className="text-white text-right">$120,400</span>
+          <span className="text-white truncate px-1">Dizüstü Bilg.</span>
+          <span className="text-white text-right font-bold">$120.400</span>
         </div>
-        <div className="grid grid-cols-3 text-[10px] font-data py-2 border-b border-white/5">
+        <div className="grid grid-cols-3 text-xs font-data py-4 border-b border-white/5">
           <span className="text-accent-ai-blue font-bold">8504.40</span>
-          <span className="text-white truncate px-1">Adaptör</span>
-          <span className="text-white text-right">$12,200</span>
+          <span className="text-white truncate px-1">Güç Adaptörü</span>
+          <span className="text-white text-right font-bold">$12.200</span>
         </div>
-        <div className="pt-4 flex justify-between items-center">
-          <span className="text-[10px] text-slate-400">Confidence Score</span>
-          <span className="text-xs font-black text-accent-glow">%99.8</span>
+        <div className="pt-6 flex justify-between items-center">
+          <span className="text-xs text-slate-400 font-medium">Doğruluk Oranı</span>
+          <span className="text-lg font-black text-accent-glow tracking-tighter">%99.8</span>
         </div>
-        <div className="flex gap-2 pt-2">
+        <div className="flex gap-4 pt-4">
           {["XML", "PDF", "ERP"].map(type => (
-            <div key={type} className="flex-1 py-1.5 rounded-lg bg-white/5 text-[9px] font-black text-center border border-white/10 hover:bg-accent-ai-blue/20 cursor-pointer transition-colors uppercase tracking-wider">
+            <div key={type} className="flex-1 py-3 rounded-2xl bg-white/5 text-[11px] font-black text-center border border-white/10 hover:bg-accent-ai-blue/20 cursor-pointer transition-colors uppercase tracking-widest">
               {type}
             </div>
           ))}
