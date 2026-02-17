@@ -64,27 +64,27 @@ export default function HomePage() {
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-0 z-[100] bg-slate-950/50 backdrop-blur-xl border-b border-white/10">
+      <nav className="sticky top-0 z-[100] bg-primary-dark/50 backdrop-blur-xl border-b border-white/5">
         <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/tr" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.5)] group-hover:scale-110 transition-transform duration-300">
+            <div className="w-10 h-10 bg-accent-ai-blue rounded-xl flex items-center justify-center shadow-enterprise group-hover:scale-110 transition-transform duration-300">
               <FileSearch className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-black tracking-tighter text-white group-hover:text-blue-400 transition-colors">GÜMRÜK AI</span>
+            <span className="text-xl font-black tracking-tighter text-white group-hover:text-accent-glow transition-colors">GÜMRÜK AI</span>
           </Link>
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-10">
-            <Link href="/" className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-all">Anasayfa</Link>
-            <Link href="#features" className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-all">Yetenekler</Link>
-            <Link href="#workflow" className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-all">Nasıl Çalışır?</Link>
-            <Link href="#pricing" className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-all">Fiyatlandırma</Link>
-            <Link href="/tr/blogs" className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-white transition-all">Haberler</Link>
+            <Link href="/" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all">Anasayfa</Link>
+            <Link href="#features" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all">Yetenekler</Link>
+            <Link href="#workflow" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all">Nasıl Çalışır?</Link>
+            <Link href="#pricing" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all">Fiyatlandırma</Link>
+            <Link href="/tr/blogs" className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-all">Haberler</Link>
           </div>
 
           <div className="hidden lg:flex items-center gap-4">
             <Link href="/tr/login" className="px-6 py-2.5 bg-white/5 text-white rounded-xl border border-white/10 text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all">Giriş</Link>
-            <Link href="/tr/login" className="px-7 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:glow-blue hover:scale-105 active:scale-95 transition-all">Başla</Link>
+            <Link href="/tr/login" className="px-7 py-3 bg-accent-ai-blue text-white rounded-xl text-xs font-black uppercase tracking-widest hover:glow-blue hover:scale-105 active:scale-95 transition-all shadow-enterprise">Başla</Link>
           </div>
 
           <button className="lg:hidden p-2 text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -95,17 +95,17 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative pt-20 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-grid-white">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[800px] bg-blue-600/10 blur-[130px] rounded-full opacity-60 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[800px] bg-accent-ai-blue/10 blur-[130px] rounded-full opacity-60 pointer-events-none" />
         <div className="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center gap-16">
           <div className="flex-1 text-center lg:text-left">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-500/10 border border-blue-500/20 rounded-full mb-10"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent-ai-blue/10 border border-accent-ai-blue/20 rounded-full mb-10"
             >
-              <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-              <span className="text-[10px] font-black text-blue-400 tracking-[0.2em] uppercase">GÜMRÜKLEMEDE OTONOM DÖNEM</span>
+              <span className="w-2 h-2 bg-accent-glow rounded-full animate-pulse shadow-[0_0_10px_rgba(0,174,239,0.8)]" />
+              <span className="text-[10px] font-black text-accent-glow tracking-[0.2em] uppercase">GÜMRÜKLEMEDE OTONOM DÖNEM</span>
             </motion.div>
 
             <motion.h1
@@ -116,7 +116,7 @@ export default function HomePage() {
               className="text-6xl lg:text-[90px] font-black mb-10 leading-[0.95] tracking-tighter text-white"
             >
               Belgeleri Yükleyin. <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-glow-blue">Yapay Zekâ Oluştursun.</span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-ai-blue via-accent-glow to-indigo-400 text-glow-blue">Yapay Zekâ Oluştursun.</span>
             </motion.h1>
 
             <p className="text-gray-400 text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 mb-16 leading-relaxed font-medium">
@@ -125,31 +125,18 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
-              <Link href="/tr/login" className="group w-full sm:w-auto px-12 py-6 bg-blue-600 text-white rounded-[2rem] text-lg font-black flex items-center justify-center gap-3 hover:bg-blue-500 transition-all shadow-[0_20px_40px_-10px_rgba(37,99,235,0.4)] hover:glow-blue active:scale-95">
+              <Link href="/tr/login" className="group w-full sm:w-auto px-12 py-6 bg-accent-ai-blue text-white rounded-2xl text-lg font-black flex items-center justify-center gap-3 hover:bg-accent-glow transition-all shadow-[0_20px_40px_-10px_rgba(0,174,239,0.4)] hover:glow-blue active:scale-95">
                 Belge Analizine Başla
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
               </Link>
-              <button className="group w-full sm:w-auto px-12 py-6 glass rounded-[2rem] text-lg font-black flex items-center justify-center gap-3 hover:bg-white/10 transition-all text-white border-white/10">
-                <Clock className="w-6 h-6 text-blue-400" /> Demo İzle
+              <button className="group w-full sm:w-auto px-12 py-6 glass rounded-2xl text-lg font-black flex items-center justify-center gap-3 hover:bg-white/10 transition-all text-white border-white/10">
+                <Clock className="w-6 h-6 text-accent-ai-blue" /> Demo İzle
               </button>
             </div>
           </div>
 
-          <div className="flex-1 w-full lg:w-auto relative flex justify-center items-center">
-            <div className="relative w-full max-w-lg aspect-square">
-              <div className="absolute inset-0 bg-blue-600/20 blur-[100px] rounded-full animate-pulse" />
-              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-transparent rounded-full border border-blue-500/20" />
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
-                className="relative z-10 w-full h-full flex items-center justify-center"
-              >
-                <img src="https://cdni.iconscout.com/illustration/premium/thumb/big-data-3462310-2895995.png" alt="AI Core" className="w-[80%] h-auto drop-shadow-[0_0_50px_rgba(59,130,246,0.3)] opacity-80" />
-              </motion.div>
-
-              <AiStatusBox />
-            </div>
+          <div className="flex-1 w-full lg:w-auto relative">
+            <AiDocumentPipelineVisual />
           </div>
         </div>
 
@@ -217,16 +204,16 @@ export default function HomePage() {
       </section>
 
       {/* Module 3: How it Works (Visual Steps) */}
-      <section id="workflow" className="py-32 relative bg-slate-950">
-        <div className="absolute inset-0 bg-blue-600/5 bg-grid-white pointer-events-none" />
+      <section id="workflow" className="py-32 relative bg-primary-dark">
+        <div className="absolute inset-0 bg-accent-ai-blue/5 bg-grid-white pointer-events-none" />
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-24">
             <h2 className="text-4xl lg:text-6xl font-black mb-6 tracking-tighter text-white">Nasıl Çalışır?</h2>
-            <p className="text-gray-400 font-medium">Karmaşık süreçleri 3 basit adıma indirdik.</p>
+            <p className="text-slate-400 font-medium">Karmaşık süreçleri 3 basit adıma indirdik.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 relative">
-            <div className="hidden lg:block absolute top-[40px] left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-blue-600/0 via-blue-600/50 to-blue-600/0" />
+            <div className="hidden lg:block absolute top-[48px] left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-accent-ai-blue/0 via-accent-ai-blue/50 to-accent-ai-blue/0" />
 
             <WorkflowStep
               number="01"
@@ -266,17 +253,17 @@ export default function HomePage() {
       </section>
 
       {/* Module 5: Testimonials */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-24 relative overflow-hidden bg-primary-dark">
         <div className="container mx-auto px-6 text-center z-10 relative">
-          <Quote className="w-16 h-16 text-blue-600/20 mx-auto mb-12" />
-          <p className="text-2xl lg:text-4xl font-bold italic leading-relaxed mb-12 text-gray-300 max-w-4xl mx-auto">
+          <Quote className="w-16 h-16 text-accent-ai-blue/20 mx-auto mb-12" />
+          <p className="text-2xl lg:text-4xl font-bold italic leading-relaxed mb-12 text-slate-300 max-w-4xl mx-auto">
             "Gümrük AI sayesinde operasyon hızımız %400 arttı. Eskiden saatler süren büyük kalemli fatura girişleri artık sadece saniyeler alıyor."
           </p>
           <div className="flex items-center justify-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-slate-800 border border-blue-500/30" />
+            <div className="w-16 h-16 rounded-full bg-secondary-dark border border-accent-ai-blue/30" />
             <div className="text-left">
               <p className="font-black text-xl text-white">Ahmet Yılmaz</p>
-              <p className="text-blue-500 font-bold text-xs tracking-widest uppercase">Kıdemli Gümrük Müşaviri</p>
+              <p className="text-accent-ai-blue font-bold text-xs tracking-widest uppercase">Kıdemli Gümrük Müşaviri</p>
             </div>
           </div>
         </div>
@@ -467,37 +454,114 @@ export default function HomePage() {
 
 // --- ENTERPRISE COMPONENTS ---
 
+function AiDocumentPipelineVisual() {
+  return (
+    <div className="relative w-full max-w-lg aspect-square mx-auto">
+      <div className="absolute inset-0 bg-accent-ai-blue/10 blur-[120px] rounded-full animate-pulse" />
+
+      {/* Central Processing Sphere */}
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          rotate: [0, 90, 180, 270, 360]
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 m-auto w-48 h-48 rounded-full border border-accent-ai-blue/30 flex items-center justify-center bg-accent-ai-blue/5 shadow-[0_0_50px_rgba(0,174,239,0.2)]"
+      >
+        <div className="w-32 h-32 rounded-full border-t-2 border-accent-glow animate-spin" />
+        <Bot className="absolute w-12 h-12 text-accent-glow" />
+      </motion.div>
+
+      {/* Floating Document Cards */}
+      <motion.div
+        animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
+        transition={{ duration: 4, repeat: Infinity }}
+        className="absolute top-10 left-0 glass p-4 rounded-xl shadow-enterprise border-accent-ai-blue/20"
+      >
+        <div className="flex items-center gap-3">
+          <FileText className="w-5 h-5 text-accent-glow" />
+          <span className="text-[10px] font-data text-white">Commercial Invoice.pdf</span>
+        </div>
+      </motion.div>
+
+      <motion.div
+        animate={{ y: [0, 15, 0], x: [0, -10, 0] }}
+        transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+        className="absolute bottom-20 left-10 glass p-4 rounded-xl shadow-enterprise border-accent-ai-blue/20"
+      >
+        <div className="flex items-center gap-3">
+          <Layers className="w-5 h-5 text-indigo-400" />
+          <span className="text-[10px] font-data text-white">PackingList.xlsx</span>
+        </div>
+      </motion.div>
+
+      {/* Connection Lines (Simulated with div) */}
+      <div className="absolute inset-0 pointer-events-none">
+        <svg className="w-full h-full opacity-20" viewBox="0 0 400 400">
+          <motion.path
+            d="M80 60 Q 200 200 200 200"
+            stroke="currentColor"
+            className="text-accent-glow"
+            fill="transparent"
+            strokeWidth="1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <motion.path
+            d="M100 320 Q 200 200 200 200"
+            stroke="currentColor"
+            className="text-accent-glow"
+            fill="transparent"
+            strokeWidth="1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+          />
+        </svg>
+      </div>
+
+      <AiStatusBox />
+    </div>
+  );
+}
+
 function AiStatusBox() {
   return (
     <motion.div
       initial={{ x: 20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.5 }}
-      className="absolute top-10 right-0 lg:-right-10 glass p-5 rounded-2xl border-white/20 shadow-2xl w-64 animate-float"
+      className="absolute top-10 right-0 lg:-right-10 glass p-6 rounded-2xl border-accent-ai-blue/20 shadow-enterprise w-72 animate-float"
     >
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[10px] font-black tracking-widest text-slate-400">DECLARATION READY</span>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+          <span className="text-[10px] font-black tracking-widest text-slate-400">DECLARATION READY</span>
+        </div>
         <CheckCircle2 className="w-4 h-4 text-emerald-400" />
       </div>
-      <div className="space-y-3">
-        <div className="flex justify-between text-[11px]">
-          <span className="text-blue-400 font-bold">8471</span>
-          <span className="text-white">Laptop</span>
-          <span className="text-white">120</span>
+      <div className="space-y-4">
+        <div className="grid grid-cols-3 text-[10px] font-data py-2 border-b border-white/5">
+          <span className="text-accent-ai-blue font-bold">8471.30</span>
+          <span className="text-white truncate px-1">Laptop</span>
+          <span className="text-white text-right">$120,400</span>
         </div>
-        <div className="flex justify-between text-[11px]">
-          <span className="text-blue-400 font-bold">8504</span>
-          <span className="text-white">Adaptör</span>
-          <span className="text-white">120</span>
+        <div className="grid grid-cols-3 text-[10px] font-data py-2 border-b border-white/5">
+          <span className="text-accent-ai-blue font-bold">8504.40</span>
+          <span className="text-white truncate px-1">Adaptör</span>
+          <span className="text-white text-right">$12,200</span>
         </div>
-        <div className="pt-3 border-t border-white/10 flex justify-between items-center">
+        <div className="pt-4 flex justify-between items-center">
           <span className="text-[10px] text-slate-400">Confidence Score</span>
-          <span className="text-xs font-black text-blue-400">%99.8</span>
+          <span className="text-xs font-black text-accent-glow">%99.8</span>
         </div>
         <div className="flex gap-2 pt-2">
-          <div className="flex-1 py-1 rounded bg-white/5 text-[9px] font-black text-center border border-white/10">XML</div>
-          <div className="flex-1 py-1 rounded bg-white/5 text-[9px] font-black text-center border border-white/10">PDF</div>
-          <div className="flex-1 py-1 rounded bg-white/5 text-[9px] font-black text-center border border-white/10">ERP</div>
+          {["XML", "PDF", "ERP"].map(type => (
+            <div key={type} className="flex-1 py-1.5 rounded-lg bg-white/5 text-[9px] font-black text-center border border-white/10 hover:bg-accent-ai-blue/20 cursor-pointer transition-colors uppercase tracking-wider">
+              {type}
+            </div>
+          ))}
         </div>
       </div>
     </motion.div>
@@ -506,84 +570,85 @@ function AiStatusBox() {
 
 function PartnerLogo({ name }: { name: string }) {
   return (
-    <div className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all cursor-crosshair">
-      <span className="text-xl font-black text-white tracking-widest">{name}</span>
+    <div className="flex items-center justify-center grayscale hover:grayscale-0 opacity-40 hover:opacity-100 transition-all cursor-crosshair">
+      <span className="text-xl font-black text-white/50 hover:text-white tracking-widest uppercase">{name}</span>
     </div>
   );
 }
 
 function TrustBadge({ text, icon }: { text: string; icon: any }) {
   return (
-    <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full">
-      {icon}
-      <span className="text-[10px] font-black tracking-widest text-white/60 uppercase">{text}</span>
+    <div className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl hover:border-accent-ai-blue/30 transition-colors">
+      <div className="text-accent-ai-blue">{icon}</div>
+      <span className="text-[10px] font-black tracking-[0.1em] text-white/60 uppercase">{text}</span>
     </div>
   );
 }
 
-// ---------------------------------
-
 function TrustStat({ value, label }: any) {
   return (
-    <div className="space-y-2 group cursor-default">
-      <p className="text-4xl lg:text-5xl font-black text-white group-hover:text-blue-500 transition-colors drop-shadow-sm">{value}</p>
-      <p className="text-[10px] font-black text-blue-500 tracking-[0.2em] uppercase">{label}</p>
+    <div className="space-y-3 group cursor-default">
+      <p className="text-4xl lg:text-5xl font-black text-white group-hover:text-accent-ai-blue transition-colors text-glow-blue">{value}</p>
+      <div className="w-12 h-1 bg-accent-ai-blue/30 mx-auto rounded-full group-hover:w-20 transition-all" />
+      <p className="text-[10px] font-black text-accent-glow tracking-[0.2em] uppercase">{label}</p>
     </div>
   );
 }
 
 function FeatureCard({ icon, title, desc }: any) {
   return (
-    <div className="p-10 glass rounded-[2.5rem] border-white/10 hover:border-blue-500/50 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
+    <div className="p-10 glass rounded-[2rem] border-white/10 hover:border-accent-ai-blue/40 shadow-enterprise hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden">
       <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-opacity">
-        <div className="w-32 h-32 bg-blue-500 rounded-full blur-[50px]" />
+        <div className="w-32 h-32 bg-accent-ai-blue rounded-full blur-[60px]" />
       </div>
-      <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 border border-white/10 group-hover:scale-110 group-hover:border-blue-500 transition-all">
-        {icon}
+      <div className="w-16 h-16 bg-accent-ai-blue/10 rounded-xl flex items-center justify-center mb-10 border border-white/10 group-hover:scale-110 group-hover:border-accent-glow transition-all">
+        <div className="text-accent-ai-blue group-hover:text-accent-glow transition-colors">{icon}</div>
       </div>
-      <h3 className="text-2xl font-black mb-4 text-white group-hover:text-blue-400 transition-colors">{title}</h3>
-      <p className="text-gray-400 font-medium leading-relaxed">{desc}</p>
+      <h3 className="text-2xl font-black mb-4 text-white group-hover:text-accent-ai-blue transition-colors">{title}</h3>
+      <p className="text-slate-400 font-medium leading-relaxed">{desc}</p>
     </div>
   );
 }
 
 function WorkflowStep({ number, title, desc, icon }: any) {
   return (
-    <div className="relative z-10 text-center space-y-6 group">
-      <div className="w-20 h-20 glass rounded-[2rem] flex items-center justify-center mx-auto relative group hover:border-blue-500 hover:glow-blue hover:shadow-lg transition-all border-white/10">
-        <div className="absolute -top-4 -left-4 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-xs font-black shadow-lg text-white border-2 border-slate-900">{number}</div>
-        <div className="text-blue-400">{icon}</div>
+    <div className="relative z-10 text-center space-y-8 group">
+      <div className="w-24 h-24 glass rounded-[2.5rem] flex items-center justify-center mx-auto relative group hover:border-accent-ai-blue hover:shadow-enterprise transition-all border-white/10">
+        <div className="absolute -top-4 -left-4 w-10 h-10 bg-accent-ai-blue rounded-full flex items-center justify-center text-xs font-black shadow-lg text-white border-2 border-primary-dark">{number}</div>
+        <div className="text-accent-ai-blue group-hover:text-accent-glow transition-colors scale-125">{icon}</div>
       </div>
-      <h4 className="text-2xl font-black text-white group-hover:text-blue-400 transition-colors">{title}</h4>
-      <p className="text-gray-400 font-medium leading-relaxed px-4">{desc}</p>
+      <div className="space-y-4">
+        <h4 className="text-2xl font-black text-white group-hover:text-accent-ai-blue transition-colors">{title}</h4>
+        <p className="text-slate-400 font-medium leading-relaxed px-6">{desc}</p>
+      </div>
     </div>
   );
 }
 
 function PriceCard({ title, price, credits, features, cta, highlight, onClick }: any) {
   return (
-    <div className={`p-10 lg:p-12 rounded-[3.5rem] border ${highlight ? 'bg-blue-600 border-blue-400 scale-105 shadow-[0_30px_60px_-15px_rgba(59,130,246,0.4)]' : 'glass border-white/10'} flex flex-col relative transition-all hover:translate-y-[-5px]`}>
-      {highlight && <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-white text-blue-600 text-[10px] font-black rounded-full uppercase tracking-widest whitespace-nowrap shadow-lg">En Çok Tercih Edilen</div>}
-      <h3 className={`text-xl font-black mb-1 ${highlight ? 'text-blue-100' : 'text-slate-400'}`}>{title}</h3>
-      <div className="flex items-baseline gap-2 mb-8">
-        <span className={`text-4xl font-black ${highlight ? 'text-white' : 'text-white'}`}>{price}</span>
-        {price !== 'Özel' && price !== 'Ücretsiz' && <span className={`text-xs font-bold ${highlight ? 'text-white/50' : 'text-gray-500'}`}>/Paket</span>}
+    <div className={`p-10 lg:p-14 rounded-[2.5rem] border ${highlight ? 'bg-secondary-dark border-accent-ai-blue/50 scale-105 shadow-[0_30px_60px_-15px_rgba(0,174,239,0.3)]' : 'glass'} flex flex-col relative transition-all hover:translate-y-[-8px]`}>
+      {highlight && <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 bg-accent-ai-blue text-white text-[10px] font-black rounded-full uppercase tracking-[0.2em] whitespace-nowrap shadow-enterprise">En Çok Tercih Edilen</div>}
+      <h3 className={`text-xl font-black mb-2 ${highlight ? 'text-accent-glow' : 'text-slate-400'}`}>{title}</h3>
+      <div className="flex items-baseline gap-2 mb-10">
+        <span className="text-5xl font-black text-white">{price}</span>
+        {price !== 'Özel' && price !== 'Ücretsiz' && <span className={`text-xs font-bold ${highlight ? 'text-white/50' : 'text-slate-500'}`}>/Paket</span>}
       </div>
-      <div className={`p-6 rounded-3xl mb-10 ${highlight ? 'bg-white/10' : 'bg-white/5 border border-white/10'}`}>
-        <p className={`text-[9px] font-black tracking-widest uppercase mb-1 ${highlight ? 'text-white/70' : 'text-blue-400'}`}>İŞLEM HACMİ</p>
-        <p className="text-2xl font-black text-white">{credits}</p>
+      <div className={`p-8 rounded-2xl mb-12 ${highlight ? 'bg-white/10' : 'bg-white/5 border border-white/5'}`}>
+        <p className={`text-[9px] font-black tracking-[0.2em] uppercase mb-2 ${highlight ? 'text-accent-glow' : 'text-accent-ai-blue'}`}>İŞLEM HACMİ</p>
+        <p className="text-3xl font-black text-white font-data">{credits}</p>
       </div>
-      <ul className="space-y-5 mb-12 flex-1">
+      <ul className="space-y-6 mb-16 flex-1">
         {features.map((f: string, i: number) => (
-          <li key={i} className="flex items-center gap-3 text-sm font-bold">
-            <CheckCircle2 className={`w-5 h-5 ${highlight ? 'text-white' : 'text-blue-500'}`} />
-            <span className={highlight ? 'text-white' : 'text-gray-300'}>{f}</span>
+          <li key={i} className="flex items-center gap-4 text-sm font-bold">
+            <CheckCircle2 className={`w-5 h-5 ${highlight ? 'text-accent-glow' : 'text-accent-ai-blue'}`} />
+            <span className={highlight ? 'text-white' : 'text-slate-300'}>{f}</span>
           </li>
         ))}
       </ul>
       <button
         onClick={onClick}
-        className={`w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-95 ${highlight ? 'bg-white text-blue-600 hover:bg-gray-100 shadow-lg' : 'bg-blue-600 text-white hover:bg-blue-500 hover:glow-blue shadow-lg shadow-blue-500/20'}`}
+        className={`w-full py-6 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all active:scale-95 ${highlight ? 'bg-accent-ai-blue text-white hover:bg-accent-glow shadow-enterprise' : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'}`}
       >
         {cta}
       </button>
@@ -594,13 +659,13 @@ function PriceCard({ title, price, credits, features, cta, highlight, onClick }:
 function FaqItem({ id, active, setActive, question, answer }: any) {
   const isOpen = active === id;
   return (
-    <div className={`border rounded-3xl overflow-hidden transition-all ${isOpen ? 'glass border-blue-500/30' : 'bg-white/5 border-white/10'}`}>
+    <div className={`border rounded-2xl overflow-hidden transition-all ${isOpen ? 'bg-white/5 border-accent-ai-blue/30' : 'bg-white/5 border-white/5'}`}>
       <button
         onClick={() => setActive(isOpen ? null : id)}
         className="w-full p-8 flex items-center justify-between text-left hover:bg-white/5 transition-all text-white"
       >
         <span className="text-lg font-black">{question}</span>
-        <ChevronDown className={`w-6 h-6 text-blue-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-6 h-6 text-accent-ai-blue transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -608,7 +673,7 @@ function FaqItem({ id, active, setActive, question, answer }: any) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="px-8 pb-8 text-gray-400 font-medium leading-relaxed"
+            className="px-8 pb-8 text-slate-400 font-medium leading-relaxed"
           >
             {answer}
           </motion.div>
@@ -620,7 +685,7 @@ function FaqItem({ id, active, setActive, question, answer }: any) {
 
 function SocialButton({ icon }: any) {
   return (
-    <button className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
+    <button className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:bg-accent-ai-blue hover:text-white transition-all shadow-enterprise hover:-translate-y-1">
       {icon}
     </button>
   );
