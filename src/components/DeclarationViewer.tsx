@@ -18,10 +18,15 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
     const [viewMode, setViewMode] = useState<'list' | 'form' | 'evrim' | 'mavi'>('form');
     const [expandedListRows, setExpandedListRows] = useState<number[]>([]);
 
-    const handleDownload = (format: 'json' | 'xlsx' | 'pdf') => {
+    const handleDownload = async (format: 'json' | 'xlsx' | 'pdf' | 'xml') => {
         if (format === 'json') {
             const blob = new Blob([JSON.stringify(editableData, null, 2)], { type: 'application/json' });
             saveAs(blob, 'beyanname.json');
+        } else if (format === 'xml') {
+            const { generateBilgeXML } = await import('@/lib/xml-exporter');
+            const xml = generateBilgeXML(editableData);
+            const blob = new Blob([xml], { type: 'application/xml' });
+            saveAs(blob, `bilge_v2_${Date.now()}.xml`);
         } else if (format === 'xlsx') {
             // Simple flattening for Excel
             const rows: any[] = [];
@@ -92,6 +97,7 @@ export default function DeclarationViewer({ data }: DeclarationViewerProps) {
                     {/* Actions */}
                     <div className="flex gap-2">
                         <button onClick={() => handleDownload('json')} className="p-2 text-gray-600 hover:bg-gray-100 rounded tooltip" title="JSON İndir"><FileJson size={20} /></button>
+                        <button onClick={() => handleDownload('xml')} className="p-2 text-orange-600 hover:bg-orange-50 rounded tooltip" title="XML (Bilge) İndir"><FileCode size={20} /></button>
                         <button onClick={() => handleDownload('xlsx')} className="p-2 text-green-600 hover:bg-green-50 rounded tooltip" title="Excel İndir"><FileSpreadsheet size={20} /></button>
                         <button onClick={() => handleDownload('pdf')} className="p-2 text-red-600 hover:bg-red-50 rounded tooltip" title="PDF Yazdır"><Printer size={20} /></button>
                     </div>
