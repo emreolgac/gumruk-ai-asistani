@@ -9,14 +9,14 @@ const execPromise = util.promisify(exec);
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { databaseUrl, googleClientId, googleClientSecret, geminiApiKey, paytrMerchantId, paytrSecretKey, appUrl } = body;
+        const { databaseUrl, googleClientId, googleClientSecret, claudeApiKey, paytrMerchantId, paytrSecretKey, appUrl } = body;
 
         // 1. Prepare .env content
         const envContent = `
 DATABASE_URL="${databaseUrl}"
 GOOGLE_CLIENT_ID="${googleClientId}"
 GOOGLE_CLIENT_SECRET="${googleClientSecret}"
-GEMINI_API_KEY="${geminiApiKey}"
+CLAUDE_API_KEY="${claudeApiKey}"
 PAYTR_MERCHANT_ID="${paytrMerchantId}"
 PAYTR_SECRET_KEY="${paytrSecretKey}"
 NEXTAUTH_URL="${appUrl}"

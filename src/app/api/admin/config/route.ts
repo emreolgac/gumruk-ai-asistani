@@ -19,7 +19,7 @@ export async function GET() {
 
         // Return merge of ENV and DB configs
         const envKeys = [
-            { key: 'GEMINI_API_KEY', group: 'API' },
+            { key: 'CLAUDE_API_KEY', group: 'API' },
             { key: 'NEXT_PUBLIC_GTM_ID', group: 'SEO' },
             { key: 'NEXT_PUBLIC_GSC_VERIFICATION', group: 'SEO' },
             { key: 'SITE_TITLE', group: 'SEO' },

@@ -1,6 +1,8 @@
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { getConfig } from '@/lib/config';
+
+const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL_NAME = "claude-sonnet-4-6";
 
 export interface AuditReport {
     score: number; // 0-100
@@ -16,14 +18,12 @@ export interface AuditReport {
  * It checks for logic errors, missing fields, and compliance issues.
  */
 export async function auditDeclaration(draftJson: any, regimeInstructions: string): Promise<AuditReport> {
-    const apiKey = await getConfig('GEMINI_API_KEY');
+    const apiKey = await getConfig('CLAUDE_API_KEY');
     if (!apiKey) throw new Error("API Key missing for Auditor");
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+    const systemPrompt = `Sen kıdemli bir Gümrük Mevzuat Denetmeni ve Müfettişisin (Auditor). Görevin gümrük beyannamesi taslaklarını inceleyip hata ve uyumsuzlukları raporlamaktır.`;
 
-    const prompt = `
-    ROL: Sen kıdemli bir Gümrük Mevzuat Denetmeni ve Müfettişisin (Auditor).
+    const userPrompt = `
     GÖREV: Aşağıdaki Gümrük Beyannamesi taslağını (JSON) incele ve olası hataları, mevzuat uyumsuzluklarını ve eksiklikleri raporla.
     
     KURALLAR:
@@ -39,7 +39,7 @@ export async function auditDeclaration(draftJson: any, regimeInstructions: strin
 
     ÇIKTI FORMATI (SAF JSON):
     {
-      "score": 85, (0-100 arası güven puanı),
+      "score": 85,
       "summary": "Genel değerlendirme cümlesi...",
       "criticalIssues": ["Kritik Hata 1", "Kritik Hata 2"],
       "warnings": ["Uyarı 1", "Uyarı 2"],
@@ -49,8 +49,33 @@ export async function auditDeclaration(draftJson: any, regimeInstructions: strin
   `;
 
     try {
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
+        const response = await fetch(CLAUDE_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+            },
+            body: JSON.stringify({
+                model: MODEL_NAME,
+                max_tokens: 4096,
+                system: systemPrompt,
+                messages: [
+                    { role: 'user', content: userPrompt },
+                ],
+            }),
+        });
+
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`Claude API Error: ${response.status} - ${errorBody}`);
+        }
+
+        const data = await response.json();
+        const responseText = data.content
+            ?.filter((block: any) => block.type === 'text')
+            .map((block: any) => block.text)
+            .join('') || '';
 
         // Clean JSON
         const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();

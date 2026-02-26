@@ -88,7 +88,7 @@ export default function SiteSettingsPage() {
             title: 'API Entegrasyonları',
             icon: <Code className="w-6 h-6 text-orange-500" />,
             desc: 'Yapay zeka modelleri ve dış servisler için anahtar yönetimi.',
-            keys: ['GEMINI_API_KEY']
+            keys: ['CLAUDE_API_KEY']
         }
     ];
 

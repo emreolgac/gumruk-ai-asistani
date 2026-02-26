@@ -12,7 +12,7 @@ export default function InstallPage() {
         databaseUrl: '',
         googleClientId: '',
         googleClientSecret: '',
-        geminiApiKey: '',
+        claudeApiKey: '',
         paytrMerchantId: '',
         paytrSecretKey: '',
         appUrl: 'http://localhost:3000'
@@ -118,10 +118,10 @@ export default function InstallPage() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1 text-gray-300">Gemini API Key</label>
+                            <label className="block text-sm font-medium mb-1 text-gray-300">Claude API Key</label>
                             <input
-                                name="geminiApiKey"
-                                value={formData.geminiApiKey}
+                                name="claudeApiKey"
+                                value={formData.claudeApiKey}
                                 onChange={handleChange}
                                 className="w-full bg-gray-700 border border-gray-600 rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none transition"
                             />

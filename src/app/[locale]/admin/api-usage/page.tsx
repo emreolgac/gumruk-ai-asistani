@@ -56,7 +56,7 @@ export default function AdminApiUsagePage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-white mb-8">🤖 Gemini API Kullanımı</h1>
+            <h1 className="text-3xl font-bold text-white mb-8">🤖 Claude API Kullanımı</h1>
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
